@@ -1,0 +1,279 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252"><script src="Clockwise_Spiral%20Rule_files/athena.js" type="text/javascript"></script>
+<script type="text/javascript">window.addEventListener('DOMContentLoaded',function(){var v=archive_analytics.values;v.service='wb';v.server_name='wwwb-app201.us.archive.org';v.server_ms=310;archive_analytics.send_pageview({});});</script>
+<script type="text/javascript" src="Clockwise_Spiral%20Rule_files/bundle-playback.js" charset="utf-8"></script>
+<script type="text/javascript" src="Clockwise_Spiral%20Rule_files/wombat.js" charset="utf-8"></script>
+<script>window.RufflePlayer=window.RufflePlayer||{};window.RufflePlayer.config={"autoplay":"on","unmuteOverlay":"hidden"};</script>
+<script type="text/javascript" src="Clockwise_Spiral%20Rule_files/ruffle.js"></script>
+<script type="text/javascript">
+    __wm.init("https://web.archive.org/web");
+  __wm.wombat("https://c-faq.com/decl/spiral.anderson.html","20240922224454","https://web.archive.org/","web","https://web-static.archive.org/_static/",
+	      "1727045094");
+</script>
+<link rel="stylesheet" type="text/css" href="Clockwise_Spiral%20Rule_files/banner-styles.css">
+<link rel="stylesheet" type="text/css" href="Clockwise_Spiral%20Rule_files/iconochive.css">
+<!-- End Wayback Rewrite JS Include -->
+
+<title>Clockwise/Spiral Rule</title>
+</head>
+<body><!-- BEGIN WAYBACK TOOLBAR INSERT -->
+<script>__wm.rw(0);</script>
+<div id="wm-ipp-base" lang="en" style="display: block; direction: ltr;">
+</div><div id="wm-ipp-print">The Wayback Machine - https://web.archive.org/web/20240922224454/https://c-faq.com/decl/spiral.anderson.html</div>
+<script type="text/javascript">//<![CDATA[
+__wm.bt(725,27,25,2,"web","https://c-faq.com/decl/spiral.anderson.html","20240922224454",1996,"https://web-static.archive.org/_static/",["https://web-static.archive.org/_static/css/banner-styles.css?v=S1zqJCYt","https://web-static.archive.org/_static/css/iconochive.css?v=qtvMKcIJ"], false);
+  __wm.rw(1);
+//]]></script>
+<!-- END WAYBACK TOOLBAR INSERT -->
+ 
+[This was posted to comp.lang.c by its author,
+David Anderson, on 1994-05-06.]
+<!-- Message-ID: &lt;17188@anderson&gt; -->
+<h1>The ``Clockwise/Spiral Rule''</h1>
+<h2>By David Anderson</h2>
+<p>
+There is a technique known as the ``Clockwise/Spiral Rule'' which enables
+any C programmer to parse in their head any C declaration!
+</p><p>
+There are three simple steps to follow:
+</p><ol>
+<li>
+Starting with the unknown element, move in a spiral/clockwise direction;
+when ecountering the following elements replace them with the corresponding
+english statements:
+<p>
+</p><dl>
+<dt>
+[X] or []
+</dt><dd>
+=&gt; Array X size of... or Array undefined size of...
+</dd>
+<dt>
+(type1, type2)
+</dt><dd>
+=&gt; function passing type1 and type2 returning...
+</dd>
+<dt>
+*
+</dt><dd>
+=&gt; pointer(s) to...
+</dd></dl>
+<p>
+</p></li><li>
+Keep doing this in a spiral/clockwise direction until all tokens have been
+covered.
+<p>
+</p></li><li>
+Always resolve anything in parenthesis first!
+</li></ol>
+<h3>Example #1: Simple declaration</h3>
+<pre>                     +-------+
+                     | +-+   |
+                     | ^ |   |
+                char *str[10];
+                 ^   ^   |   |
+                 |   +---+   |
+                 +-----------+
+</pre>
+Question we ask ourselves: What is str?
+<blockquote>
+``str is an...
+</blockquote>
+<ul>
+<li>
+We move in a spiral clockwise direction starting with `str' and the first
+character we see is a `[' so, that means we have an array, so...
+<blockquote>
+``str is an array 10 of...
+</blockquote>
+</li><li>
+Continue in a spiral clockwise direction, and the next thing we encounter is
+the `*' so, that means we have pointers, so...
+<blockquote>
+``str is an array 10 of pointers to...
+</blockquote>
+</li><li>
+Continue in a spiral direction and we see the end of the line (the `;'), so
+keep going and we get to the type `char', so...
+<blockquote>
+``str is an array 10 of pointers to char''
+</blockquote>
+</li><li>
+We have now ``visited'' every token; therefore we are done!
+</li></ul>
+<h3>Example #2: Pointer to Function declaration</h3>
+<pre>                     +--------------------+
+                     | +---+              |
+                     | |+-+|              |
+                     | |^ ||              |
+                char *(*fp)( int, float *);
+                 ^   ^ ^  ||              |
+                 |   | +--+|              |
+                 |   +-----+              |
+                 +------------------------+
+</pre>
+Question we ask ourselves: What is fp?
+<blockquote>
+``fp is a...
+</blockquote>
+<ul>
+<li>
+Moving in a spiral clockwise direction, the first thing we see is a `)';
+therefore, fp is inside parenthesis, so we continue the spiral inside the
+parenthesis and the next character seen is the `*', so...
+<blockquote>
+``fp is a pointer to...
+</blockquote>
+</li><li>
+We are now out of the parenthesis and continuing in a spiral clockwise
+direction, we see the `('; therefore, we have a function, so...
+<blockquote>
+``fp is a pointer to a function passing an int and a pointer to float
+returning...
+</blockquote>
+</li><li>
+Continuing in a spiral fashion, we then see the `*' character, so...
+<blockquote>
+``fp is a pointer to a function passing an int and a pointer to float
+returning a pointer to...
+</blockquote>
+</li><li>
+Continuing in a spiral fashion we see the `;', but we haven't visited all
+tokens, so we continue and finally get to the type `char', so...
+<blockquote>
+``fp is a pointer to a function passing an int and a pointer to float
+returning a pointer to a char''
+</blockquote>
+</li></ul>
+<h3>Example #3: The ``Ultimate''</h3>
+<pre>                      +-----------------------------+
+                      |                  +---+      |
+                      |  +---+           |+-+|      |
+                      |  ^   |           |^ ||      |
+                void (*signal(int, void (*fp)(int)))(int);
+                 ^    ^      |      ^    ^  ||      |
+                 |    +------+      |    +--+|      |
+                 |                  +--------+      |
+                 +----------------------------------+
+</pre>
+<p>
+Question we ask ourselves: What is `signal'?
+</p><p>
+Notice that signal is <em>inside</em> parenthesis, so we must resolve this first!
+</p><ul>
+<li>
+Moving in a <em>clockwise</em> direction we see `(' so we have...
+<blockquote>
+``signal is a function passing an int and a...
+</blockquote>
+</li><li>
+Hmmm, we can use this same rule on `fp', so... What is fp? fp is also inside
+parenthesis so continuing we see an `*', so...
+<blockquote>
+fp is a pointer to...
+</blockquote>
+</li><li>
+Continue in a spiral clockwise direction and we get to `(', so...
+<blockquote>
+``fp is a pointer to a function passing int returning...''
+</blockquote>
+</li><li>
+Now we continue out of the function parenthesis and we see void, so...
+<blockquote>
+``fp is a pointer to a function passing int returning nothing (void)''
+</blockquote>
+</li><li>
+We have finished with fp so let's catch up with `signal', we now have...
+<blockquote>
+``signal is a function passing an int and a pointer to a function passing an
+int returning nothing (void) returning...
+</blockquote>
+</li><li>
+We are still inside parenthesis so the next character seen is a `*', so...
+<blockquote>
+``signal is a function passing an int and a pointer to a function passing an
+int returning nothing (void) returning a pointer to...
+</blockquote>
+</li><li>
+We have now resolved the items within parenthesis, so continuing clockwise,
+we then see another `(', so...
+<blockquote>
+``signal is a function passing an int and a pointer to a function passing an
+int returning nothing (void) returning a pointer to a function passing an
+int returning...
+</blockquote>
+</li><li>
+<em>Finally</em> we continue and the only thing left is the word `void', so the
+final complete definition for signal is:
+<blockquote>
+``signal is a function passing an int and a pointer to a function passing an
+int returning nothing (void) returning a pointer to a function passing an
+int returning nothing (void)''
+</blockquote>
+</li></ul>
+<p>
+The same rule is applied for const and volatile. For Example:
+</p><pre>	const char *chptr;
+</pre>
+<ul>
+<li>
+Now, what is chptr??
+<blockquote>
+``chptr is a pointer to a char constant''
+</blockquote>
+</li></ul>
+<p>
+How about this one:
+</p><pre>	char * const chptr;
+</pre>
+<ul>
+<li>
+Now, what is chptr??
+<blockquote>
+``chptr is a constant pointer to char''
+</blockquote>
+</li></ul>
+<p>
+Finally:
+</p><pre>	volatile char * const chptr;
+</pre>
+<ul>
+<li>
+Now, what is chptr??
+<blockquote>
+``chptr is a constant pointer to a char volatile.''
+</blockquote>
+</li></ul>
+<p>
+Practice this rule with the examples found in K&amp;R II on page 122.
+</p><p>
+</p><hr>
+Copyright © 1993,1994 David Anderson
+<p>
+This article may be freely distributed as long as the author's name and
+this notice are retained.
+</p><hr>
+
+
+
+</body></html>
+<!--
+     FILE ARCHIVED ON 22:44:54 Sep 22, 2024 AND RETRIEVED FROM THE
+     INTERNET ARCHIVE ON 23:59:40 Oct 01, 2024.
+     JAVASCRIPT APPENDED BY WAYBACK MACHINE, COPYRIGHT INTERNET ARCHIVE.
+
+     ALL OTHER CONTENT MAY ALSO BE PROTECTED BY COPYRIGHT (17 U.S.C.
+     SECTION 108(a)(3)).
+-->
+<!--
+playback timings (ms):
+  captures_list: 6.03
+  exclusion.robots: 0.038
+  exclusion.robots.policy: 0.026
+  esindex: 0.01
+  cdx.remote: 13.274
+  LoadShardBlock: 124.439 (3)
+  PetaboxLoader3.datanode: 89.847 (5)
+  PetaboxLoader3.resolve: 104.362 (2)
+  load_resource: 140.69 (2)
+-->
