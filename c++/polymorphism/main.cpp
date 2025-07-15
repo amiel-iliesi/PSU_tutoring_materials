@@ -54,20 +54,20 @@ int main()
     animals.push_back(make_unique<Dog>("Rover"));
     animals.push_back(make_unique<Turtle>("Shelly", "Turquoise"));
 
-    for (size_t i = 0; i < animals.size(); ++i) {
-        Animal* animal = animals[i].get(); 
-
-        if (animal) {
-            cout << animal->get_name();
-            if (dynamic_cast<Dog*>(animal)) {
+    for (const unique_ptr<Animal>& animal_uptr: animals) {
+        Animal* animal_ptr = animal_uptr.get();
+        
+        if (animal_ptr) {
+            cout << animal_ptr->get_name();
+            if (dynamic_cast<Dog*>(animal_ptr)) {
                 cout << "(Dog)";
             }
-            else if (Turtle* turtle = dynamic_cast<Turtle*>(animal)) {
+            else if (Turtle* turtle = dynamic_cast<Turtle*>(animal_ptr)) {
                 cout << "(Turtle)<" << turtle->get_shell_color() << '>';
             }
 
             cout << ": ";
-            animal->make_noise();
+            animal_ptr->make_noise();
         }
     }
 
