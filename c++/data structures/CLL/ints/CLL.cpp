@@ -113,7 +113,12 @@ void CLL::display() const
 
 void CLL::display(const Node* const & curr) const
 {
+    if (!curr) {
+        return;
+    }
+
 	cout << curr->data;
+
 	if (curr != rear) {
 		cout << "->";
 		display(curr->next);
