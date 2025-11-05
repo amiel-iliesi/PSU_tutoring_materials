@@ -5,8 +5,8 @@ using namespace std;
 
 int main()
 {
-	List ints;
-	ints.display();
+    List ints;
+    ints.display();
 
-	return 0;
+    return 0;
 }

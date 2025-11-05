@@ -14,7 +14,7 @@ void build(Node*& head)
 	int length = 10 + (rand() % 10);
 
 	head = new Node;
-	head->data = rand() % 20;
+	head->data = rand() % 8;
 	head->next = nullptr;
 
 	Node* tail = head;
@@ -23,7 +23,7 @@ void build(Node*& head)
 		tail->next = new Node;
 		tail = tail->next;
 		tail->next = nullptr;
-		tail->data = rand() % 20;
+		tail->data = rand() % 8;
 	}
 }
 

@@ -26,20 +26,19 @@ struct Node {
 int main()
 {
 	// Karla's functions (don't touch)
-	Node* head = nullptr;
-	build(head);
-	display(head);
+	Node* rear = nullptr;
+	build(rear);
+	display(rear);
 
 	// ----------------------------------------
 	// - put your function calls here! --------
 	// ----------------------------------------
 
-
 	// ----------------------------------------
 	// - END of custom user function calls! ---
 	// ----------------------------------------
 
-	destroy(head);
+	destroy(rear);
 
 	return 0;
 }

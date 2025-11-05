@@ -9,17 +9,21 @@ using namespace std;
 // in the proficiency demo
 void build(Node*& rear)
 {
+    const int MIN = 0;
+    const int MAX = 20;
+    const int RANGE = (MAX - MIN) + 1;
+
 	srand(time(NULL));
 
 	int length = 10 + (rand() % 10);
 
 	rear = new Node;
-	rear->data = rand() % 10;
+	rear->data = (rand() % RANGE) + MIN;
 	rear->next = rear;
 	
 	for (int i = 1; i < length; ++i) {
 		Node* new_node = new Node;
-		new_node->data = rand() % 10;
+		new_node->data = (rand() % RANGE) + MIN;
 		new_node->next = rear->next;
 
 		rear->next = new_node;
