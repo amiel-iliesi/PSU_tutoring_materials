@@ -5,6 +5,14 @@
 // NOTE: for a more complete definition, consider using smart pointers and
 // sets, instead of raw pointers and vectors!
 
+// NOTE: This graph implementation runs slow, but should be easier to work with
+// as a result. For more details: this std::vector implementation compares on
+// equality, so no std::hash or std::less needs to be supplied to the template.
+// This does make it run O(n) instead of O(1) or O(log(n)) on most operations.
+// But it does mean that you can use whatever types you like, so long as the ==
+// operator is supported for the type. If that's too slow, consider replacing
+// the vector with a std::unordered_set and requiring a supplied std::hash.
+
 template <typename T>
 class Graph
 {
