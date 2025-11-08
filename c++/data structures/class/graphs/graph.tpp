@@ -1,15 +1,16 @@
-#include "graph.h"
 #include <iostream>
 #include <vector>
 
 using namespace std;
 
-Graph::Vertex::Vertex(int _ID)
+template <typename T>
+Graph<T>::Vertex::Vertex(const T& key)
 {
-	ID = _ID;
+	ID = key;
 }
 
-Graph::Vertex* Graph::get(int ID)
+template <typename T>
+Graph<T>::Vertex* Graph<T>::get(const T& ID)
 {
 	for (Vertex *vertex: vertices) {
 		if (ID == vertex->ID) {
@@ -20,7 +21,8 @@ Graph::Vertex* Graph::get(int ID)
 	return nullptr;
 }
 
-const Graph::Vertex* Graph::get(int ID) const
+template <typename T>
+const Graph<T>::Vertex* Graph<T>::get(const T& ID) const
 {
 	for (const Vertex *vertex: vertices) {
 		if (ID == vertex->ID) {
@@ -31,7 +33,8 @@ const Graph::Vertex* Graph::get(int ID) const
 	return nullptr;
 }
 
-Graph::~Graph()
+template <typename T>
+Graph<T>::~Graph()
 {
 	for (Vertex* vertex: vertices) {
 		delete vertex;
@@ -39,7 +42,8 @@ Graph::~Graph()
 	vertices.clear();
 }
 
-bool Graph::contains(int ID) const
+template <typename T>
+bool Graph<T>::contains(const T& ID) const
 {
 	for (const Vertex* vertex: vertices) {
 		if (vertex->ID == ID) {
@@ -50,10 +54,11 @@ bool Graph::contains(int ID) const
 	return false;
 }
 
-bool Graph::Vertex::connected_to(int _ID) const
+template <typename T>
+bool Graph<T>::Vertex::connected_to(const T& key) const
 {
 	for (const Vertex* edge: edges) {
-		if (edge->ID == _ID) {
+		if (edge->ID == key) {
 			return true;
 		}
 	}
@@ -61,7 +66,8 @@ bool Graph::Vertex::connected_to(int _ID) const
 	return false;
 }
 
-bool Graph::push(int ID)
+template <typename T>
+bool Graph<T>::push(const T& ID)
 {
 	if (contains(ID)) {
 		return false;
@@ -72,7 +78,8 @@ bool Graph::push(int ID)
 	return true;
 }
 
-void Graph::pop(int ID)
+template <typename T>
+void Graph<T>::pop(const T& ID)
 {
 	// erase all references to ID in all edge lists
 	for (Vertex *vertex: vertices) {
@@ -99,7 +106,8 @@ void Graph::pop(int ID)
 	}
 }
 
-bool Graph::connect(int va, int vb)
+template <typename T>
+bool Graph<T>::connect(const T& va, const T& vb)
 {
 	Vertex *va_p = get(va);
 	Vertex *vb_p = get(vb);	
@@ -113,7 +121,8 @@ bool Graph::connect(int va, int vb)
 	return true;
 }
 
-bool Graph::disconnect(int va, int vb)
+template <typename T>
+bool Graph<T>::disconnect(const T& va, const T& vb)
 {
 	Vertex *va_p = get(va);
 	Vertex *vb_p = get(vb);
@@ -127,14 +136,16 @@ bool Graph::disconnect(int va, int vb)
 	return true;
 }
 
-size_t Graph::connections(int ID) const
+template <typename T>
+size_t Graph<T>::connections(const T& ID) const
 {
 	const Vertex *vertex = get(ID);
 
 	return (vertex ? vertex->edges.size() : 0);
 }
 
-void Graph::display(bool verbose) const
+template <typename T>
+void Graph<T>::display(bool verbose) const
 {
 	if (vertices.empty()) {
 		cout << "<Graph @" << this << " is empty>" << endl;

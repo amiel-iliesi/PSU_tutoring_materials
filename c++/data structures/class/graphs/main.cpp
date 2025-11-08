@@ -16,7 +16,7 @@ constexpr int MAX_CONNECTIONS = CONNECTIONS_MIN + CONNECTIONS_VAR;
 
 int main()
 {
-	Graph graph;
+	Graph<int> graph;
 
 	random_device rd;
 

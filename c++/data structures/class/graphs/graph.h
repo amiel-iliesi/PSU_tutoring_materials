@@ -2,36 +2,39 @@
 
 #include <vector>
 
-// NOTE: for a more complete definition, consider using smart pointers and
-// sets, instead of raw pointers and vectors!
+// NOTE: for a more complete definition, consider using smart poTers and
+// sets, instead of raw poTers and vectors!
 
+template <typename T>
 class Graph
 {
 	private:
 		struct Vertex
 		{
-			int ID;
+			T ID;
 
 			std::vector<Vertex*> edges;
 
-			Vertex(int);
+			Vertex(const T&);
 			
-			bool connected_to(int) const;
+			bool connected_to(const T&) const;
 		};
 
-		Vertex* get(int);
-		const Vertex* get(int) const;
+		Vertex* get(const T&);
+		const Vertex* get(const T&) const;
 
 		std::vector<Vertex*> vertices;
 	public:
 		~Graph();
 
-		bool contains(int) const;
-		bool push(int);
-		void pop(int);
-		bool connect(int, int);
-		bool disconnect(int, int);
-		std::size_t connections(int) const;
-		bool connected(int, int) const;
+		bool contains(const T&) const;
+		bool push(const T&);
+		void pop(const T&);
+		bool connect(const T&, const T&);
+		bool disconnect(const T&, const T&);
+		std::size_t connections(const T&) const;
+		bool connected(const T&, const T&) const;
 		void display(bool) const;
 };
+
+#include "graph.tpp"
