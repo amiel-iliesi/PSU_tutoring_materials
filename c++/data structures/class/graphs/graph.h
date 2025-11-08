@@ -2,8 +2,8 @@
 
 #include <vector>
 
-// NOTE: for a more complete definition, consider using smart poTers and
-// sets, instead of raw poTers and vectors!
+// NOTE: for a more complete definition, consider using smart pointers and
+// sets, instead of raw pointers and vectors!
 
 template <typename T>
 class Graph
