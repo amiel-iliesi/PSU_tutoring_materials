@@ -43,11 +43,11 @@ int main()
 
 	bubble_sort(v);
 	cout << "bubble sort: " << (is_sorted(v) ? "✓" : "✗") << endl;
+	
 	v = shuffled_vector;
 
 	insertion_sort(v);
 	cout << "insertion sort: " << (is_sorted(v) ? "✓" : "✗") << endl;
-	v = shuffled_vector;
 
 	return 0;
 }
