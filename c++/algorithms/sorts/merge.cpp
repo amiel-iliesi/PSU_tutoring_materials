@@ -1,9 +1,9 @@
 #include "merge.h"
+#include "merge_util.h"
+
 #include <vector>
 
 using namespace std;
-
-vector<int> merge(const vector<int>&, const vector<int>&);
 
 void merge_sort(vector<int>& v)
 {

@@ -1,6 +1,7 @@
 #include "bubble.h"
 #include "insertion.h"
 #include "merge.h"
+#include "hybrid.h"
 
 #include <iostream>
 #include <algorithm>
@@ -11,11 +12,13 @@
 
 using namespace std;
 
+using sort_func = function<void(vector<int>&)>;
+
 // - helper function prototypes -------------------------------
 bool is_sorted(const vector<int>&);
 void display(const vector<int>&);
-chrono::microseconds time(vector<int>&, function<void(vector<int>&)>);
-void run(vector<int>&, const string&, function<void(vector<int>&)>);
+chrono::microseconds time(vector<int>&, sort_func);
+void run(vector<int>&, const string&, sort_func);
 
 
 
@@ -48,11 +51,14 @@ int main()
 	cout << "running sorts:\n--------------" << endl;
 
 	// put sorts to be called here:
-	vector<pair<string, function<void(vector<int>&)>>> to_run = {
+	using func_pair = pair<string, sort_func>;
+
+	vector<func_pair> to_run = {
 		{"std::sort", ranges::sort},
 		{"bubble sort", bubble_sort},
 		{"insertion sort", insertion_sort},
-		{"merge sort", merge_sort}
+		{"merge sort", merge_sort},
+		{"hybrid sort", hybrid_sort}
 	};
 
 	for (auto &[name, func]: to_run) {
@@ -97,7 +103,7 @@ void display(const vector<int>& v)
 	cout << endl;
 }
 
-chrono::microseconds time(vector<int>& v, function<void(vector<int>&)> f)
+chrono::microseconds time(vector<int>& v, sort_func f)
 {
 	chrono::high_resolution_clock clock;
 
@@ -108,7 +114,7 @@ chrono::microseconds time(vector<int>& v, function<void(vector<int>&)> f)
 	return duration_cast<chrono::microseconds>(t2 - t1);
 }
 
-void run(vector<int>& v, const string& f_name, function<void(vector<int>&)> f)
+void run(vector<int>& v, const string& f_name, sort_func f)
 {
 	chrono::microseconds runtime = time(v, f);
 	
