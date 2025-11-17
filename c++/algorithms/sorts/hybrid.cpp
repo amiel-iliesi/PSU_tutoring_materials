@@ -1,5 +1,4 @@
 #include "hybrid.h"
-#include "merge.h"
 #include "merge_util.h"
 #include "insertion.h"
 
@@ -22,8 +21,8 @@ void hybrid_sort(vector<int>& v)
 	vector<int> vl(v.begin(), middle);
 	vector<int> vr(middle, v.end());
 
-	merge_sort(vl);
-	merge_sort(vr);
+	hybrid_sort(vl);
+	hybrid_sort(vr);
 
 	v = merge(vl, vr);
 }
