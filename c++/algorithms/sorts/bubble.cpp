@@ -13,9 +13,9 @@ void bubble_sort(vector<int>& v)
 	do {
 		swapped = false;
 
-		for (auto i = v.begin(); i+1 != v.end(); ++i) {
-			if (*(i+1) < *i) {
-				swap(*i, *(i+1));
+		for (int i = 0; i+1 != (int)v.size(); ++i) {
+			if (v[i] > v[i+1]) {
+				swap(v[i], v[i+1]);
 				swapped = true;
 			}
 		}
