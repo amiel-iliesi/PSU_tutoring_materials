@@ -1,8 +1,8 @@
-CC=g++ -std=c++20
+CC=g++ -std=c++23
 CFLAGS=-g -Wall -Wextra -Wpedantic -Wshadow -Werror
-EXEC=graph
+EXEC=program
 
-$(EXEC): main.cpp
+$(EXEC):main.cpp graph.cpp place.cpp
 	$(CC) $(CFLAGS) $^ -o $@
 
 .PHONY: clean
