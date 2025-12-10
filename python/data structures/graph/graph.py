@@ -132,7 +132,7 @@ class Graph(Generic[T]):
                 A: T,
                 B: T,
                 weight: Optional[Any] = None,
-                bidirectional: Optional[bool] = False) -> None:
+                bidirectional: bool = False) -> None:
         '''Connects `A`→`B` with the given weight.
 
         **arguments**:
@@ -166,7 +166,7 @@ class Graph(Generic[T]):
     def disconnect(self,
                    A: T,
                    B: T,
-                   bidirectional: Optional[bool] = None) -> None:
+                   bidirectional: bool = False) -> None:
         '''Disconnects `A`→`B`.
 
         **arguments**:
