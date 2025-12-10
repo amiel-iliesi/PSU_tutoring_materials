@@ -96,7 +96,6 @@ bool Tree::contains(int data) const
 	return contains(root, data);
 }
 
-
 bool Tree::contains(const Node* curr, int data) const
 {
 	if (!curr) {
@@ -112,3 +111,28 @@ bool Tree::contains(const Node* curr, int data) const
 		return contains(curr->left, data);
 	}
 }
+
+// -custom functions go here-----------------------------------
+Tree Tree::copy_evens() const
+{
+	Tree new_tree;
+
+	copy_evens(this->root, new_tree);
+
+	return new_tree;
+}
+
+void Tree::copy_evens(const Node* current, Tree& new_tree) const
+{
+	if (!current) {
+		return;
+	}
+
+	if (current->data % 2 == 0) {
+		new_tree.push(current->data);
+	}
+
+	copy_evens(current->left, new_tree);
+	copy_evens(current->right, new_tree);
+}
+// ------------------------------------------------------------
