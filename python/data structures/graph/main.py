@@ -6,7 +6,7 @@ if __name__ == "__main__":
     graph = SearchGraph[int]()
 
     # NOTE: tweak these
-    SIZE = 100
+    SIZE = 5
     CONNECTIONS_MIN = 0
     CONNECTIONS_MAX = 4
     WEIGHTED = False

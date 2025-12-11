@@ -9,6 +9,9 @@ class _Edge(Generic[T]):
     to: '_Vertex'
     weight: Optional[Any] = None
 
+    def __repr__(self):
+        return str(self.weight) if self.weight is not None else ''
+
 
 class _Vertex(Generic[T]):
     def __init__(self, key: T, data: Optional[Any] = None):
@@ -33,11 +36,12 @@ class _Vertex(Generic[T]):
         return s
 
     def __repr__(self):
-        s = f'{repr(self.key)},{repr(self.data)}'
+        s = f'{repr(self.key)},'
 
-        s += '{' +\
-            ','.join(f'{repr(e)}:{repr(self.edges[e])}' for e in self.edges) +\
-            '}'
+        s += f'{repr(self.data) if self.data is not None else ""},'
+
+        s += '(' + ','.join(f'E({repr(e)}:{repr(self.edges[e])})'
+                            for e in self.edges) + ')'
 
         return s
 
@@ -84,10 +88,10 @@ class Graph(Generic[T]):
             '\n}'
 
     def __repr__(self):
-        return '{' +\
-            ','.join(f'{repr(key)}:({repr(self.vertices[key])})'
-                     for key in self.vertices) +\
-            '}'
+        return 'G(' +\
+            ','.join(f'V({repr(vertex)})'
+                     for vertex in self.vertices.values()) +\
+            ')'
 
     def create_vertex(self, key: T, data: Optional[Any] = None) -> None:
         '''Creates a vertex in the graph.
