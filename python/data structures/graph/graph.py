@@ -7,7 +7,7 @@ T = TypeVar('T')
 
 @dataclass
 class _Edge(Generic[T]):
-    to: _Vertex
+    to: _Vertex[T]
     weight: Optional[Any] = None
 
     def __repr__(self):
@@ -20,7 +20,7 @@ class _Vertex(Generic[T]):
 
         self.key: T = key
         self.data: Optional[Any] = data
-        self.edges: dict[T, _Edge] = {}
+        self.edges: dict[T, _Edge[T]] = {}
 
     def __str__(self) -> str:
         s = str(self.key)
@@ -38,15 +38,18 @@ class _Vertex(Generic[T]):
 
     def __repr__(self) -> str:
         return f'_Vertex(key={repr(self.key)}, data={repr(self.data)}' +\
-            f', edges=[{','.join(repr(e) for e in self.edges.values())}]'
+            f', edges=[{','.join(repr(e) for e in self.edges.values())}])'
 
     def __eq__(self, value) -> bool:
-        return self.key == value
+        if isinstance(value, _Vertex):
+            return self.key == value.key
+        else:
+            return self.key == value
 
     def __hash__(self) -> int:
         return hash(self.key)
 
-    def connect(self, to: '_Vertex', weight: Optional[Any]) -> None:
+    def connect(self, to: _Vertex[T], weight: Optional[Any]) -> None:
         self.edges[to.key] = _Edge(to, weight)
 
     def disconnect(self, key: T) -> None:

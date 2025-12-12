@@ -44,10 +44,10 @@ class SearchGraph(g.Graph[T]):
             searched.add(curr)
 
             for e in reversed(list(curr.edges.values())):
-                next = e.to
+                _next = e.to
                 weight = e.weight
-                if next not in searched:
-                    stack.append((next, path + [(next.key, weight)]))
+                if _next not in searched:
+                    stack.append((_next, path + [(_next.key, weight)]))
 
         return None
 
@@ -85,8 +85,6 @@ class SearchGraph(g.Graph[T]):
                 _from[curr] = (prev, weight)
                 found = True
                 break
-            elif curr in searched:
-                continue
 
             searched.add(curr)
             _from[curr] = (prev, weight)
@@ -94,6 +92,7 @@ class SearchGraph(g.Graph[T]):
             for e in curr.edges.values():
                 if e.to not in searched:
                     queue.append((e.to, curr, e.weight))
+                    searched.add(e.to)
 
         path: Path = []
 
