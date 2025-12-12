@@ -30,7 +30,7 @@ class _Vertex(Generic[T]):
 
         if self.edges:
             s += f': {','.join(
-                f'{e.to.key}({e.weight})' if e.weight is not None
+                f'{e.to.key}({e.weight:.3f})' if e.weight is not None
                 else f'{e.to.key}'
                 for e in self.edges.values())}'
 
@@ -155,6 +155,10 @@ class Graph(Generic[T]):
             if key not in self.vertices:
                 raise KeyError(f'{key} is not in the graph')
 
+        if bidirectional and A == B:
+            raise ValueError(
+                f'{A}→{B}: cannot bidirectionally connect to self')
+
         va = self.vertices[A]
         vb = self.vertices[B]
 
@@ -190,6 +194,10 @@ class Graph(Generic[T]):
         for key in (A, B):
             if key not in self.vertices:
                 raise KeyError(f'{key} is not in the graph')
+
+        if bidirectional and A == B:
+            raise ValueError(
+                f'{A}→{B}: cannot bidirectionally disconnect from self')
 
         va = self.vertices[A]
         vb = self.vertices[B]
