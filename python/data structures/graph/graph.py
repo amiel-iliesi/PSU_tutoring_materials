@@ -7,6 +7,7 @@ T = TypeVar('T')
 
 @dataclass
 class _Edge(Generic[T]):
+    '''Representation of a connection between vertices.'''
     to: _Vertex[T]
     weight: Optional[Any] = None
 
@@ -15,6 +16,7 @@ class _Edge(Generic[T]):
 
 
 class _Vertex(Generic[T]):
+    '''Representation of a vertex in a graph.'''
     def __init__(self, key: T, data: Optional[Any] = None):
         super().__init__()
 
