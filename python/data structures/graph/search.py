@@ -19,6 +19,7 @@ class SearchGraph(g.Graph[T]):
         **returns**:
 
         The path, along with the weight from the previous vertex, IE
+
         (vertex key, weight from previous)'''
         for key in (A, B):
             if key not in self.vertices:
@@ -57,6 +58,7 @@ class SearchGraph(g.Graph[T]):
         **returns**:
 
         The path, along with the weight from the previous vertex, IE
+
         (vertex key, weight from previous)
         '''
         for key in (A, B):
