@@ -1,3 +1,4 @@
+from __future__ import annotations
 from typing import TypeVar, Generic, Optional, Any
 from dataclasses import dataclass
 
@@ -6,11 +7,11 @@ T = TypeVar('T')
 
 @dataclass
 class _Edge(Generic[T]):
-    to: '_Vertex'
+    to: _Vertex
     weight: Optional[Any] = None
 
     def __repr__(self):
-        return str(self.weight) if self.weight is not None else ''
+        return f'_Edge(to={repr(self.to.key)}, weight={repr(self.weight)})'
 
 
 class _Vertex(Generic[T]):
@@ -21,7 +22,7 @@ class _Vertex(Generic[T]):
         self.data: Optional[Any] = data
         self.edges: dict[T, _Edge] = {}
 
-    def __str__(self):
+    def __str__(self) -> str:
         s = str(self.key)
 
         if self.data is not None:
@@ -35,26 +36,20 @@ class _Vertex(Generic[T]):
 
         return s
 
-    def __repr__(self):
-        s = f'{repr(self.key)},'
+    def __repr__(self) -> str:
+        return f'_Vertex(key={repr(self.key)}, data={repr(self.data)}' +\
+            f', edges=[{','.join(repr(e) for e in self.edges.values())}]'
 
-        s += f'{repr(self.data) if self.data is not None else ""},'
+    def __eq__(self, value) -> bool:
+        return self.key == value
 
-        s += '(' + ','.join(f'E({repr(e)}:{repr(self.edges[e])})'
-                            for e in self.edges) + ')'
-
-        return s
+    def __hash__(self) -> int:
+        return hash(self.key)
 
     def connect(self, to: '_Vertex', weight: Optional[Any]) -> None:
-        if to.key in self.edges:
-            raise ValueError(f'{self.key}→{to.key}: already connected')
-
         self.edges[to.key] = _Edge(to, weight)
 
     def disconnect(self, key: T) -> None:
-        if key not in self.edges:
-            raise ValueError(f'{self.key}↛{key}: not connected')
-
         del self.edges[key]
 
     def connected(self, key: T) -> bool:
@@ -82,16 +77,14 @@ class Graph(Generic[T]):
 
         self.vertices: dict[T, _Vertex[T]] = {}
 
-    def __str__(self):
+    def __str__(self) -> str:
         return 'Graph {\n' +\
             ',\n'.join(str(v) for v in self.vertices.values()) +\
             '\n}'
 
-    def __repr__(self):
-        return 'G(' +\
-            ','.join(f'V({repr(vertex)})'
-                     for vertex in self.vertices.values()) +\
-            ')'
+    def __repr__(self) -> str:
+        vertices = ','.join(repr(v) for v in self.vertices.values())
+        return f'Graph(vertices={vertices})'
 
     def create_vertex(self, key: T, data: Optional[Any] = None) -> None:
         '''Creates a vertex in the graph.
@@ -162,6 +155,11 @@ class Graph(Generic[T]):
         va = self.vertices[A]
         vb = self.vertices[B]
 
+        if va.connected(B):
+            raise ValueError(f'{A}→{B}: already connected')
+        if bidirectional and vb.connected(A):
+            raise ValueError(f'{B}→{A}: already connected')
+
         va.connect(vb, weight)
 
         if bidirectional:
@@ -192,6 +190,11 @@ class Graph(Generic[T]):
 
         va = self.vertices[A]
         vb = self.vertices[B]
+
+        if not va.connected(B):
+            raise ValueError(f'{A}↛{B}: not connected')
+        if bidirectional and not vb.connected(A):
+            raise ValueError(f'{B}↛{A}: not connected')
 
         va.disconnect(B)
 

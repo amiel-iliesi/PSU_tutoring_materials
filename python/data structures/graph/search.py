@@ -1,7 +1,10 @@
 import graph as g
-from typing import TypeVar, Optional
+from typing import TypeVar, TypeAlias, Optional, Any
+from collections import deque
 
 T = TypeVar('T')
+
+Path: TypeAlias = list[tuple[T, Any]]
 
 
 class SearchGraph(g.Graph[T]):
@@ -10,73 +13,98 @@ class SearchGraph(g.Graph[T]):
     def __init__(self):
         super().__init__()
 
-    def DFS(self, A: T, B: T) -> Optional[list[T]]:
-        '''Depth-First Search.'''
+    def DFS(self, A: T, B: T) -> Optional[Path]:
+        '''Depth-First Search.
+
+        **returns**:
+
+        The path, along with the weight from the previous vertex, IE
+        (vertex key, weight from previous)'''
         for key in (A, B):
             if key not in self.vertices:
-                return None
+                raise KeyError(f'{key} is not in the graph')
 
         searched: set[g._Vertex[T]] = set()
 
-        def _DFS(curr: g._Vertex[T], goal: g._Vertex[T]) -> Optional[list[T]]:
+        goal = self.vertices[B]
+
+        # stack is [(curr, path), ...]
+        stack: list[tuple[g._Vertex[T], Path]] = [
+            (self.vertices[A], [(A, None)])
+        ]
+
+        while stack:
+            curr, path = stack.pop()
+
             if curr == goal:
-                return [curr.key]
+                return path
             elif curr in searched:
-                return None
+                continue
 
             searched.add(curr)
 
-            for e in curr.edges.values():
-                path = _DFS(e.to, goal)
-                if path is not None:
-                    return [curr.key] + path
+            for e in reversed(list(curr.edges.values())):
+                next = e.to
+                weight = e.weight
+                if next not in searched:
+                    stack.append((next, path + [(next.key, weight)]))
 
-            return None
+        return None
 
-        return _DFS(self.vertices[A], self.vertices[B])
+    def BFS(self, A: T, B: T) -> Optional[Path]:
+        '''Breadth-First Search.
 
-    def BFS(self, A: T, B: T) -> Optional[list[T]]:
-        '''Breadth-First Search.'''
+        **returns**:
+
+        The path, along with the weight from the previous vertex, IE
+        (vertex key, weight from previous)
+        '''
         for key in (A, B):
             if key not in self.vertices:
-                return None
+                raise KeyError(f'{key} is not in the graph')
 
         searched: set[g._Vertex[T]] = set()
 
-        # format for queue is [(curr, prev), ...]
+        QueueElement: TypeAlias = tuple[g._Vertex, Optional[g._Vertex], Any]
+
+        # format for queue is [(curr, prev, edge weight), ...]
         # NOTE: prev can be None because the start has no prev
-        queue: list[tuple[g._Vertex[T],
-                          Optional[g._Vertex[T]]]] = [(self.vertices[A], None)]
+        queue: deque[QueueElement] = deque([(self.vertices[A], None, None)])
 
         goal = self.vertices[B]
 
         # NOTE: value can be None for the same reason queue prev can be None
-        _from: dict[g._Vertex[T], Optional[g._Vertex[T]]] = {}
+        _from: dict[g._Vertex[T], tuple[Optional[g._Vertex[T]], Any]] = {}
 
         found = False
 
         while queue:
-            curr, prev = queue.pop(0)
+            curr, prev, weight = queue.popleft()
 
             if curr == goal:
-                _from[curr] = prev
+                _from[curr] = (prev, weight)
                 found = True
                 break
             elif curr in searched:
                 continue
 
             searched.add(curr)
-            _from[curr] = prev
+            _from[curr] = (prev, weight)
 
             for e in curr.edges.values():
-                queue.append((e.to, curr))
+                if e.to not in searched:
+                    queue.append((e.to, curr, e.weight))
 
-        path: list[T] = []
+        path: Path = []
 
         if found:
-            path_curr: Optional[g._Vertex[T]] = goal
+            path = [(goal.key, _from[goal][1])]
+            path_curr, _ = _from[goal]
             while path_curr is not None:
-                path.insert(0, path_curr.key)
-                path_curr = _from[path_curr]
+                path.append((path_curr.key, _from[path_curr][1]))
+                path_curr, _ = _from[path_curr]
 
-        return path if path else None
+        return path[::-1] if path else None
+
+    def Dijkstra(self, A: T, B: T) -> Optional[list[T]]:
+        pass

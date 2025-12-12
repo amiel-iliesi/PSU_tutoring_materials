@@ -6,10 +6,10 @@ if __name__ == "__main__":
     graph = SearchGraph[int]()
 
     # NOTE: tweak these
-    SIZE = 5
+    SIZE = 10
     CONNECTIONS_MIN = 0
     CONNECTIONS_MAX = 4
-    WEIGHTED = False
+    WEIGHTED = True
     WEIGHT_MIN = 0.0
     WEIGHT_MAX = 1.0
     BIDIRECTIONAL = False
@@ -41,5 +41,6 @@ if __name__ == "__main__":
     for algo in ALGOS:
         path = algo(a, b)
         print(f'{algo.__name__}: {a}→{b}: ' +
-              ('→'.join(str(p) for p in path)
+              ('→'.join(f'{p}{f'({w:.2f})' if w is not None else ''}'
+                        for p, w in path)
                if path is not None else str(None)))
