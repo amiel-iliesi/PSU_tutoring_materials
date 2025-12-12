@@ -1,12 +1,12 @@
 from search import SearchGraph
-
 from random import randint, uniform
+from typing import Any
 
 if __name__ == "__main__":
     graph = SearchGraph[int]()
 
     # NOTE: tweak these
-    SIZE = 10
+    SIZE = 100
     CONNECTIONS_MIN = 0
     CONNECTIONS_MAX = 4
     WEIGHTED = True
@@ -40,7 +40,26 @@ if __name__ == "__main__":
     a, b = 0, SIZE-1
     for algo in ALGOS:
         path = algo(a, b)
-        print(f'{algo.__name__}: {a}→{b}: ' +
-              ('→'.join(f'{p}{f'({w:.2f})' if w is not None else ''}'
-                        for p, w in path)
-               if path is not None else str(None)))
+
+        weight_sum: Any = None
+
+        if path is not None:
+            for _, weight in path:
+                if weight is not None:
+                    if weight_sum is None:
+                        weight_sum = weight
+                    else:
+                        weight_sum += weight
+
+        path_result = f'{algo.__name__}'
+
+        if weight_sum is not None:
+            path_result += f'(total={weight_sum:.3f})'
+
+        path_result += f': {a}→{b}: '
+
+        path_result += ('→'.join(f'{p}{f"({w:.3f})" if w is not None else ''}'
+                                 for p, w in path)
+                        if path is not None else str(None))
+
+        print(path_result)
