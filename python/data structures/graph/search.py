@@ -106,4 +106,5 @@ class SearchGraph(g.Graph[T]):
         return path[::-1] if path else None
 
     def Dijkstra(self, A: T, B: T) -> Optional[list[T]]:
-        pass
+        # TODO
+        raise NotImplementedError("Dijkstra search impossible")
