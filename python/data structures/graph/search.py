@@ -4,6 +4,7 @@ from collections import deque
 
 T = TypeVar('T')
 
+# Path is a tuple of (vertex key, weight)
 Path: TypeAlias = list[tuple[T, Any]]
 
 
@@ -107,6 +108,6 @@ class SearchGraph(g.Graph[T]):
 
         return path[::-1] if path else None
 
-    def Dijkstra(self, A: T, B: T) -> Optional[list[T]]:
+    def Dijkstra(self, A: T, B: T) -> Optional[Path]:
         # TODO
         raise NotImplementedError("Dijkstra search impossible")
