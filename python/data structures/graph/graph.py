@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import TypeVar, Generic, Optional, Any
+from typing import TypeVar, Generic, Any
 from dataclasses import dataclass
 
 T = TypeVar('T')
@@ -9,7 +9,7 @@ T = TypeVar('T')
 class _Edge(Generic[T]):
     '''Representation of a connection between vertices.'''
     to: _Vertex[T]
-    weight: Optional[Any] = None
+    weight: Any = None
 
     def __repr__(self):
         return f'_Edge(to={repr(self.to.key)}, weight={repr(self.weight)})'
@@ -17,11 +17,11 @@ class _Edge(Generic[T]):
 
 class _Vertex(Generic[T]):
     '''Representation of a vertex in a graph.'''
-    def __init__(self, key: T, data: Optional[Any] = None):
+    def __init__(self, key: T, data: Any = None):
         super().__init__()
 
         self.key: T = key
-        self.data: Optional[Any] = data
+        self.data: Any = data
         self.edges: dict[T, _Edge[T]] = {}
 
     def __str__(self) -> str:
@@ -51,7 +51,7 @@ class _Vertex(Generic[T]):
     def __hash__(self) -> int:
         return hash(self.key)
 
-    def connect(self, to: _Vertex[T], weight: Optional[Any]) -> None:
+    def connect(self, to: _Vertex[T], weight: Any) -> None:
         self.edges[to.key] = _Edge(to, weight)
 
     def disconnect(self, key: T) -> None:
@@ -60,7 +60,7 @@ class _Vertex(Generic[T]):
     def connected(self, key: T) -> bool:
         return key in self.edges
 
-    def connection(self, key: T) -> tuple[bool, Optional[Any]]:
+    def connection(self, key: T) -> tuple[bool, Any]:
         '''Gets connection info to `key`.
 
         **arguments**:
@@ -91,7 +91,7 @@ class Graph(Generic[T]):
         vertices = ','.join(repr(v) for v in self.vertices.values())
         return f'Graph(vertices={vertices})'
 
-    def create_vertex(self, key: T, data: Optional[Any] = None) -> None:
+    def create_vertex(self, key: T, data: Any = None) -> None:
         '''Creates a vertex in the graph.
 
         **arguments**:
@@ -133,7 +133,7 @@ class Graph(Generic[T]):
     def connect(self,
                 A: T,
                 B: T,
-                weight: Optional[Any] = None,
+                weight: Any = None,
                 bidirectional: bool = False) -> None:
         '''Connects `A`→`B` with the given weight.
 
@@ -214,7 +214,7 @@ class Graph(Generic[T]):
         if bidirectional:
             vb.disconnect(A)
 
-    def connection(self, A: T, B: T) -> tuple[bool, Optional[Any]]:
+    def connection(self, A: T, B: T) -> tuple[bool, Any]:
         '''Gets connection info of `A`→`B`.
 
         **arguments**:
