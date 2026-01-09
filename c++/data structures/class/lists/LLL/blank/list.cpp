@@ -6,7 +6,6 @@ using namespace std;
 List::List()
 {
 	head = nullptr;
-	tail = nullptr;
 }
 
 List::~List()
@@ -16,7 +15,6 @@ List::~List()
 		head = head->next;
 		delete temp;
 	}
-	tail = nullptr;
 }
 
 
@@ -26,14 +24,7 @@ void List::push(int data)
 	new_node->data = data;
 	new_node->next = head;
 
-	if (head) {
-		head->prev = new_node;
-	}
 	head = new_node;
-
-	if (!tail) {
-		tail = head;
-	}
 }
 
 void List::push_back(int data)
@@ -41,14 +32,18 @@ void List::push_back(int data)
 	Node *new_node = new Node;
 	new_node->data = data;
 	new_node->next = nullptr;
-	new_node->prev = tail;
 
-	if (tail) {
+	if (head) {
+		Node *tail = head;
+		
+		while (tail->next) {
+			tail = tail->next;
+		}
+
 		tail->next = new_node;
-		tail = new_node;
 	}
 	else {
-		head = tail = new_node;
+		head = new_node;
 	}
 }
 
@@ -61,7 +56,7 @@ void List::display() const
 		cout << head->data;
 
 		for (Node *curr=head->next; curr; curr=curr->next) {
-			cout << " <-> " << curr->data;
+			cout << " -> " << curr->data;
 		}
 
 		cout << endl;
