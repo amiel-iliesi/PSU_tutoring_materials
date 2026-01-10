@@ -18,10 +18,12 @@ class List
 		bool insert(Node*& curr, int x, int pos);
 		bool pop(Node*& curr, int pos);
 		void remove(Node*& curr, int x, int count);
+		void reverse(Node* curr);
 		
 		// NOTE: `curr` expected to be `nullptr`; not validated
 		void copy(Node*& curr, const Node* other_curr); 
 		void clear(Node*& curr);
+		void filter_evens(Node*& curr);
 		// ----------------------------------------
 	public:
 		List();
@@ -63,7 +65,12 @@ class List
 		// 5. Overload the assignment operator
 		void operator=(const List& other);
 
-		// TODO: EXERCISES: hard
+		// EXERCISES: hard
+		// 1. Remove all evens
+		void filter_evens();
+
+		// 2. Reverse a list in place with resursive backtracking (one-pass)
+		void reverse();
 		
 		// TODO: EXERCISES: absurd
 

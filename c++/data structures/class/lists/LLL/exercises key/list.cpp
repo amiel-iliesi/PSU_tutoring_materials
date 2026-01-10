@@ -63,7 +63,7 @@ void List::display() const
 	}
 }
 
-// -EXERCISES: easy-------------------------------------------------------------
+// -EXERCISES: Easy-------------------------------------------------------------
 void List::append(int x)
 {
 	append(head, x);
@@ -183,6 +183,7 @@ void List::remove(Node*& curr, int x, int count)
 
 List::List(const List& other)
 {
+	head = nullptr;
 	copy(head, other.head);
 }
 
@@ -220,6 +221,51 @@ void List::clear(Node*& curr)
 		delete to_delete;
 
 		clear(curr);
+	}
+}
+// -----------------------------------------------------------------------------
+
+// -EXERCISES: Hard-------------------------------------------------------------
+void List::filter_evens()
+{
+	filter_evens(head);
+}
+
+void List::filter_evens(Node*& curr)
+{
+	if (!curr) {
+		return;
+	}
+	else {
+		if (curr->data % 2 == 0) {
+			Node* to_delete = curr;
+			curr = curr->next;
+			delete to_delete;
+
+			filter_evens(curr);
+		}
+		else {
+			filter_evens(curr->next);
+		}
+	}
+}
+
+void List::reverse()
+{
+	if (head) {
+		reverse(head);
+	}
+}
+
+void List::reverse(Node* curr)
+{
+	if (!curr->next) {
+		head = curr;
+	}
+	else {
+		reverse(curr->next); // tail recursion (call order is crucial)
+		curr->next->next = curr; // we do work, after backtrack
+		curr->next = nullptr; // cut cycle
 	}
 }
 // -----------------------------------------------------------------------------

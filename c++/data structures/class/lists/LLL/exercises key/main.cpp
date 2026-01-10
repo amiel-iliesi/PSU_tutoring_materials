@@ -75,6 +75,16 @@ int main()
 	other_list = list;
 	cout << "other list, after assignment:\n";
 	other_list.display();
+	cout << '\n';
+
+	cout << "Hard, 1: removing all evens...\n";
+	list.filter_evens();
+	list.display();
+	cout << '\n';
+
+	cout << "Hard, 2: reversing list...\n";
+	list.reverse();
+	list.display();
 	// ------------------------------------------------------------
 
 	return 0;
