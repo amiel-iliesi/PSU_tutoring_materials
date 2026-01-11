@@ -1,5 +1,7 @@
 #pragma once
 
+#include <functional>
+
 class List
 {
 	private:
@@ -18,12 +20,15 @@ class List
 		bool insert(Node*& curr, int x, int pos);
 		bool pop(Node*& curr, int pos);
 		void remove(Node*& curr, int x, int count);
-		void reverse(Node* curr);
 		
 		// NOTE: `curr` expected to be `nullptr`; not validated
 		void copy(Node*& curr, const Node* other_curr); 
 		void clear(Node*& curr);
 		void filter_evens(Node*& curr);
+		void reverse(Node* curr);
+		void pop_back(Node*& curr, int n, int& dist_from_back);
+		void remove_if(Node*& curr, std::function<bool(const int&)> f); 
+		int sum_if(const Node* curr, std::function<bool(const int&)> f) const;
 		// ----------------------------------------
 	public:
 		List();
@@ -71,8 +76,16 @@ class List
 
 		// 2. Reverse a list in place with resursive backtracking (one-pass)
 		void reverse();
-		
-		// TODO: EXERCISES: absurd
 
+		// 3. Delete the last `n` elements from the list
+		void pop_back(int n);
+		
+		// EXERCISES: absurd
+		// 1. Remove all elements that satisfy a criteria
+		// NOTE: compare to `Pred pred` in `std::vector.erase_if(...)`
+		void remove_if(std::function<bool(const int&)> f); 
+
+		// 2. Sum all elements that satisfy a criteria
+		int sum_if(std::function<bool(const int&)> f) const;
 		// ----------------------------------------
 };

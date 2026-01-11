@@ -268,4 +268,72 @@ void List::reverse(Node* curr)
 		curr->next = nullptr; // cut cycle
 	}
 }
+
+void List::pop_back(int n)
+{
+	if (n <= 0 or !head) {
+		return;
+	}
+
+	int dist_from_back = -1;
+	pop_back(head, n, dist_from_back);
+}
+
+void List::pop_back(Node*& curr, int n, int& dist_from_back)
+{
+	if (!curr->next) {
+		dist_from_back = 0;
+	}
+	else {
+		pop_back(curr->next, n, dist_from_back);
+		++dist_from_back;
+	}
+
+	if (dist_from_back < n) {
+		Node* to_delete = curr;
+		curr = curr->next;
+		delete to_delete;
+	}
+}
+
+void List::remove_if(std::function<bool(const int&)> f)
+{
+	remove_if(head, f);
+}
+
+void List::remove_if(Node*& curr, std::function<bool(const int&)> f)
+{
+	if (!curr) {
+		return;
+	}
+
+	if (f(curr->data)) {
+		Node* to_delete = curr;
+		curr = curr->next;
+		delete to_delete;
+
+		remove_if(curr, f);
+	}
+	else {
+		remove_if(curr->next, f);
+	}
+}
+
+int List::sum_if(std::function<bool(const int&)> f) const
+{
+	return sum_if(head, f);
+}
+
+int List::sum_if(const Node* curr, std::function<bool(const int&)> f) const
+{
+	if (!curr) {
+		return 0;
+	}
+	else if (f(curr->data)) {
+		return curr->data + sum_if(curr->next, f);
+	}
+	else {
+		return sum_if(curr->next, f);
+	}
+}
 // -----------------------------------------------------------------------------
