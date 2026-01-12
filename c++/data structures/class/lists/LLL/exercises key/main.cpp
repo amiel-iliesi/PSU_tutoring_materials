@@ -13,12 +13,14 @@ int main()
 	random_device rd;
 	default_random_engine gen(rd());
 
-	for (int i = 16 + gen() % 8; i >= 0; --i) {
+	for (int i = 8 + gen() % 8; i >= 0; --i) {
 		list.push(gen() % 100);
 	}
 
+	List original = list;
+
 	cout << "original list:\n";
-	list.display();
+	original.display();
 	cout << '\n';
 
 	// -custom function calls here---------------------------------
@@ -95,10 +97,16 @@ int main()
 	list.display();
 
 	cout << "-Exercises: Absurd------------------------------------------\n";
+	
+	cout << "The list is too small now, restoring the list to the original...\n";
+	list = original;
+	list.display();
+	cout << '\n';
 
 	cout << "1: removing all elements where x >= 50...\n";
 	list.remove_if([](const int& x) -> bool { return x >= 50; });
 	list.display();
+	cout << '\n';
 
 	cout << "2: summing of all elements where x <= 25...\n";
 	cout << "sum = " << list.sum_if([](const int& x) -> bool { return x <= 25; });
