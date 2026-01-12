@@ -295,7 +295,9 @@ void List::pop_back(Node*& curr, int n, int& dist_from_back)
 		delete to_delete;
 	}
 }
+// -----------------------------------------------------------------------------
 
+// -EXERCISES: Absurd-----------------------------------------------------------
 void List::remove_if(std::function<bool(const int&)> f)
 {
 	remove_if(head, f);
