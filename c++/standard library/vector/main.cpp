@@ -1,62 +1,46 @@
-#include "person.h"
-#include <iostream>
+#include "place.h"
 #include <vector>
+#include <iostream>
 
 using namespace std;
 
-int main() {
-	vector<Person> people;
+int main()
+{
+	// read `vector<A> B`, as "a vector holding elements of type A, called B"
+	vector<Place> places;
 
-	// emplace_back is like push_back, but it lets you construct your object!
-	people.emplace_back("Amiel", 25);
-	people.emplace_back("Jeff", 35);
-	people.emplace_back("Karla", 58);
-
-
+	// -ADDING-----------------------------------------------------
+	// There are 2 main ways to add to a vector,
+	// 1. push existing element
+	Place temp_place("McDonalds", "Restaurant");
+	places.push_back(temp_place);
 	
-	// loop method 1: use indecies
-	cout << "displaying people using method 1...\n";
-	
-	for (int i = 0; i < people.size(); ++i) {
-		people[i].display();
+	// 2. construct a new element without an intermediate
+	places.emplace_back("Germany", "Country");
+
+	// NOTE: this requires you to have a constructor for your object; emplace_back
+	// calls that constructor. I have supplied that constructor for you, in this
+	// case.
+
+	// -ITERATING--------------------------------------------------
+	// There are also 3 main ways to iterate through a vector,
+	// 1. counting
+	cout << "1. counting loop:\n";
+	for (size_t i = 0; i < places.size(); ++i) {
+		cout << "- " << places[i].name << '(' << places[i].type << ")\n";
 	}
 
-	cout << '\n';
-
-
-	
-	// loop method 2: use iterators
-	cout << "displaying people using method 2...\n";
-	
-	for (auto it = people.begin(); it != people.end(); ++it) {
-		it->display(); // need to dereference iterator to use object at location
+	// 2. iterator looping (standard library style; makes code more flexible than
+	//    counting)
+	cout << "\n2. iterator loop:\n";
+	for (auto it = places.begin(); it != places.end(); ++it) {
+		cout << "- " << it->name << '(' << it->type << ")\n";
 	}
 
-	cout << '\n';
-	
-
-
-	// loop method 3: container range based loop (this one is new! (and my favorite))
-	cout << "displaying people using method 3...\n";
-	
-	for (const Person & person: people) { // read it like "for each person in people"
-		person.display();
-	}
-
-	cout << '\n';
-
-
-	
-	// look how easy it is to remove an item
-	cout << "removing Karla...\n";
-
-	// the two below can be one line, just separated for clarity
-	auto karlas_position = people.begin() + 2; // * people[0 + 2]
-	people.erase(karlas_position);
-		// * the type is: vector<People>::iterator
-
-	for (const Person & person: people) {
-		person.display();
+	// 3. range-based looping (my favorite)
+	cout << "\n3. range loop:\n";
+	for (const Place& p: places) {
+		cout << "- " << p.name << '(' << p.type << ")\n";
 	}
 
 	return 0;
