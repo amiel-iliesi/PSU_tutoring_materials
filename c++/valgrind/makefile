@@ -1,8 +1,8 @@
-CC=g++
-CFLAGS=-g -Wall -Wextra -Wpedantic -Wshadow
-EXEC=forgot_to_dealloc
+CC=g++ -std=c++23
+CFLAGS=-g -Wall -Wextra -Wpedantic -Wshadow -Werror
+EXEC=
 
-$(EXEC): functions.cpp main.cpp
+$(EXEC):
 	$(CC) $(CFLAGS) $^ -o $@
 
 .PHONY: clean
