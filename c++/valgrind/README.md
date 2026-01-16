@@ -252,9 +252,12 @@ Book::Book(const Book& other):
 }
 ```
 
-Hmm, looks fine to me, the problem might be upstream, let's go up a step. Let's
-look at the `BookList::Node` constructor on line 35, and see if we missed
-anything:
+Hmm, looks fine to me, because we already created our `Book` destructor. This
+sequel pointer should already clean up after the book is freed. We can come
+back here if we can't find the problem elsewhere—in the event that we missed
+it here somehow. But for now, the problem might be upstream, let's go up a
+step. Let's look at the `BookList::Node` constructor on line 35, and see if we
+missed anything:
 ```cpp
 BookList::Node::Node(const Book& other): data(other), next(nullptr) {}
 ```
