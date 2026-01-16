@@ -262,7 +262,7 @@ missed anything:
 BookList::Node::Node(const Book& other): data(other), next(nullptr) {}
 ```
 
-We don't initialize anything here either, let's back up once more to
+We don't allocate any dynamic memory here either, let's back up once more to
 `BookList::add`, on line 66:
 ```cpp
 void BookList::add(const Book& book)
