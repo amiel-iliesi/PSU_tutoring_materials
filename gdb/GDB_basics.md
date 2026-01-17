@@ -22,7 +22,9 @@ g++ -Wall -g *.cpp
 
 * displaying: `info breakpoints`
 
-* deleting: `delete breakpoints [#]`
+* deleting: `delete [#]`
+
+* clear all breakpoints: `clear`
 
 
 
