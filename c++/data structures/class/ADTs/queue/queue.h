@@ -1,23 +1,28 @@
 #pragma once
 
-// To make the concept of ADT even clearer than the Stack example, we're going
-// to use a prebuilt type for our underlying data structure: `std::list`
+#include <string>
+#include <optional>
+#include "person.h"
 
-#include <list>
-
-
-
-template <typename T>
-class Queue {
+// implemented as CLL
+class Queue
+{
 	private:
-		std::list<T> list;
+		struct Node {
+			Person data;
+			Node* next;
 
+			Node(const Person&);
+		};
+
+		Node* rear;
 	public:
-		bool empty() const;
+		Queue();
+		~Queue();
 
-		void enqueue(const T&);
-		void dequeue();
-		T& peek();
+		void enqueue(const Person& data);
+		bool dequeue();
+		std::optional<Person> peek() const;
+
+		void display() const;
 };
-
-#include "queue.tpp"

@@ -1,46 +1,35 @@
-#include "queue.h"
 #include <iostream>
+
+// NOTE: to make this more flexible, use templates!
+#include "queue.h"
+#include "person.h"
 
 using namespace std;
 
 int main()
 {
-	Queue<int> queue;
+	Queue queue;
 
-	cout << "enqueueing {1, 2, 3, 4, 5}..." << endl;
-	for (int n: {1, 2, 3, 4, 5}) {
-		queue.enqueue(n);
+	queue.enqueue(Person("John", 35));
+	queue.enqueue(Person("Jane", 33));
+	queue.enqueue(Person("Jeff", 31));
+	queue.enqueue(Person("Josiah", 34));
+	queue.enqueue(Person("Janette", 32));
+
+	queue.display();
+
+	cout << "\ndequeuing two people...\n\n";
+	queue.dequeue();
+	queue.dequeue();
+
+	queue.display();
+
+	if (auto front = queue.peek()) {
+		cout << "\npeek: name of person at the front = " << front->name << "\n";
 	}
-
-	cout << "dequeuing 3 items: ";
-	for (int i = 0; i < 3; ++i) {
-		cout << queue.peek();
-
-		queue.dequeue();
-
-		if (i != 2) {
-			cout << ", ";
-		}
+	else {
+		cout << "\npeek: failure, can't peek an empty queue\n";
 	}
-	cout << endl;
-
-	cout << "enqueueing: {6, 7, 8}..." << endl;
-	for (int n: {6, 7, 8}) {
-		queue.enqueue(n);
-	}
-
-
-	cout << "dequeuing remaining: ";
-	while (not queue.empty()) {
-		cout << queue.peek();
-
-		queue.dequeue();
-
-		if (not queue.empty()) {
-			cout << ", ";
-		}
-	}
-	cout << endl;
 
 	return 0;
 }
