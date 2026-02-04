@@ -1,6 +1,6 @@
 # Abstract Data Types
 
-Abstract data types are distinct from their underlying data types, although
+Abstract data types are distinct from their underlying data structures, although
 their relationship to one another is closely linked.
 
 Abstract data types (ADTs) have a distinct set of ways you interact with them,
