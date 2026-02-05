@@ -38,6 +38,16 @@ int LLL_to_array_unique_r(const Node* curr, int*& arr_ptr, int arr_i);
 bool contains(const Node* curr, int match);
 // ------------------------------------------------------------
 
+// -PROBLEM 3--------------------------------------------------
+// Remove the last node of the list, and count the remaining nodes.
+
+// returns remaining nodes in the list after removal
+int remove_last(Node*& head);
+
+// returns remaining nodes in the list after removal
+int remove_last_r(Node*& curr);
+// ------------------------------------------------------------
+
 int main()
 {
 	Node* head = nullptr;
@@ -47,29 +57,44 @@ int main()
 	display(head);
 
 	// PROBLEM 1:
-	cout << "\nmoving head to tail...\n";
-	move_head_to_tail(head);
+	{
+		cout << "\nmoving head to tail...\n";
+		move_head_to_tail(head);
 
-	display(head);
+		display(head);
+	}
 
 	// PROBLEM 2:
-	cout << "\nstoring unique LLL values into array...\n";
+	{
+		cout << "\nstoring unique LLL values into array...\n";
 
-	int* unique_array = nullptr;
-	int unique_array_size = LLL_to_array_unique(head, unique_array);
+		int* unique_array = nullptr;
+		int unique_array_size = LLL_to_array_unique(head, unique_array);
 
-	cout << '[';
-	if (unique_array_size >= 1) {
-		cout << unique_array[0];
+		cout << '[';
+		if (unique_array_size >= 1) {
+			cout << unique_array[0];
+		}
+		for (int i = 1; i < unique_array_size; ++i) {
+			cout << ", " << unique_array[i];
+		}
+		cout << "]\n";
+
+		delete [] unique_array;
 	}
-	for (int i = 1; i < unique_array_size; ++i) {
-		cout << ", " << unique_array[i];
-	}
-	cout << "]\n";
 
-	delete [] unique_array;
+	// PROBLEM 3:
+	{
+		cout << "\nremoving the last node...\n";
+
+		int remaining_nodes = remove_last(head);
+
+		display(head);
+		
+		cout << "There are " << remaining_nodes << " node(s) left.\n";
+	}
 	// ------------------------------------------------------------
-	
+
 	destroy(head);
 
 	return 0;
@@ -89,7 +114,7 @@ bool move_head_to_tail(Node*& head)
 
 	// now: do recursive part, append head value to end
 	append(head, prev_head_value);
-	
+
 	return true;
 }
 
@@ -130,7 +155,7 @@ int LLL_to_array_unique(const Node* head, int*& arr_ptr)
 	int arr_size = LLL_to_array_unique_r(head, arr_ptr, 0);
 
 	// 3. optional: shrink `arr_ptr` to actual content size (WE WILL NOT DO THIS)
-	
+
 	// 4. return amount of unique elements stored; IE array size
 	return arr_size;
 }
@@ -179,6 +204,35 @@ bool contains(const Node* curr, int match)
 	// recursive case
 	else {
 		return contains(curr->next, match);
+	}
+}
+// ------------------------------------------------------------
+
+// -PROBLEM 3--------------------------------------------------
+int remove_last(Node*& head)
+{
+	// case: empty list
+	if (not head) {
+		return 0;
+	}
+
+	int remaining = remove_last_r(head);
+
+	return remaining;
+}
+
+int remove_last_r(Node*& curr)
+{
+	// NOTE: because of the wrapper, curr is guaranteed to exist
+	
+	// base case: we are last
+	if (!curr->next) {
+		delete curr;
+		curr = nullptr;
+		return 0;
+	}
+	else {
+		return 1 + remove_last_r(curr->next);
 	}
 }
 // ------------------------------------------------------------
