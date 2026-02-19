@@ -27,8 +27,6 @@ float divide(float a, float b)
 	//NOTE: uncomment to see a error info packaged with the error object
 	catch (DivideByZeroError errorObj) {
 		cerr << "\nERROR: divide by zero, aborting" << endl;
-		cerr << "...tried dividing " << errorObj.numerator <<
-				" by 0.0." << endl;
 		abort();
 	}
 
@@ -42,7 +40,7 @@ float divide(float a, float b)
 int main()
 {
 	const float A = 5.0f;
-	const float B = 3.0f;
+	const float B = 0.0f;
 	cout << A << " / " << B << " = " << divide(A, B) << endl;
 	return 0;
 }

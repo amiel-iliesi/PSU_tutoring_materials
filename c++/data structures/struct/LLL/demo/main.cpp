@@ -48,6 +48,14 @@ int remove_last(Node*& head);
 int remove_last_r(Node*& curr);
 // ------------------------------------------------------------
 
+// -PROBLEM 4--------------------------------------------------
+// Duplicate every node in a list, and then return the sum
+
+// Duplicates every node one after the other, and then returns the sum of the
+// modified list.
+int duplicate_then_sum(Node*& head);
+// ------------------------------------------------------------
+
 int main()
 {
 	Node* head = nullptr;
@@ -92,6 +100,17 @@ int main()
 		display(head);
 		
 		cout << "There are " << remaining_nodes << " node(s) left.\n";
+	}
+	
+	// PROBLEM 4:
+	{
+		cout << "We are duplicating the nodes within the list...\n";
+
+		int new_sum = duplicate_then_sum(head);
+
+		display(head);
+
+		cout << "sum = " << new_sum << '\n';
 	}
 	// ------------------------------------------------------------
 
@@ -235,4 +254,8 @@ int remove_last_r(Node*& curr)
 		return 1 + remove_last_r(curr->next);
 	}
 }
+// ------------------------------------------------------------
+
+// -PROBLEM 4--------------------------------------------------
+
 // ------------------------------------------------------------
