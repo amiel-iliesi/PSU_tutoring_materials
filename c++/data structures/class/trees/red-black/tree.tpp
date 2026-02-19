@@ -409,13 +409,11 @@ bool Tree<T>::TEST_no_red_parent_child(const Node* curr) const
 		return true;
 	}
 
-	if (curr->color == Color::Red) {
-		if (curr->left and curr->left->color == Color::Red) {
-			return false;
-		}
-		if (curr->right and curr->right->color == Color::Red) {
-			return false;
-		}
+	if ((curr->color == Color::Red) and
+		((curr->left and curr->left->color == Color::Red) or
+		(curr->right and curr->right->color == Color::Red)))
+	{
+		return false;
 	}
 
 	return TEST_no_red_parent_child(curr->left.get()) and
