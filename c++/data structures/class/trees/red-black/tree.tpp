@@ -98,8 +98,8 @@ Tree<T>::Node* Tree<T>::get_sibling(Node* curr)
 template <typename T>
 bool Tree<T>::is_right(const Node* curr) const
 {
-	if (not curr->parent) {
-		throw std::logic_error("parent does not exist; undefined");
+	if (not (curr and curr->parent)) {
+		throw std::logic_error("current and it's parent don't both exist; undefined");
 	}
 
 	return curr == curr->parent->right.get();
@@ -108,8 +108,8 @@ bool Tree<T>::is_right(const Node* curr) const
 template <typename T>
 bool Tree<T>::is_left(const Node* curr) const
 {
-	if (not curr->parent) {
-		throw std::logic_error("parent does not exist; undefined");
+	if (not (curr and curr->parent)) {
+		throw std::logic_error("current and it's parent don't both exist; undefined");
 	}
 
 	return curr == curr->parent->left.get();
@@ -128,7 +128,7 @@ void Tree<T>::correct_red_violation(Node* curr)
 	 * 5: parent is red, uncle is black, child is inner
 	 * 6: parent is red, uncle is black, child is outer */
 
-	// NOTE: Nodes are declared after conditions test/assert their existance
+	// NOTE: Node pointers are declared after conditions test/assert their existence
 
 	// CASE 1, 3: violation no longer exists
 	if (not curr or
