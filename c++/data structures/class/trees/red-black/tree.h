@@ -38,13 +38,18 @@ class Tree
 		};
 
 		std::unique_ptr<Node> root;
-
-		// -helpers----------------------------------------------------
+		
+		// -Node modifiers---------------------------------------------
 		void rotate_left(Node* curr);
 		void rotate_right(Node* curr);
-		Node* get_sibling(Node* curr);
-		bool is_right(const Node* curr) const;
+		void swap(Node* A, Node* B);
+
+		// -Node interrogation-----------------------------------------
 		bool is_left(const Node* curr) const;
+		bool is_right(const Node* curr) const;
+		Node* get_sibling(Node* curr);
+		std::unique_ptr<Node>& curr_owner(const Node* curr) const;
+		Node* in_order_successor(const Node* curr) const``;
 
 		// -recursive helpers------------------------------------------
 		std::size_t size(const Node* curr) const;

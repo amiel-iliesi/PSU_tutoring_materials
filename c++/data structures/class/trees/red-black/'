@@ -1,7 +1,6 @@
 #include <iostream>
 #include <stdexcept>
 #include <algorithm> // std::swap
-#include <type_traits>
 
 // -constructors---------------------------------------------------------
 template <typename T>
@@ -11,7 +10,7 @@ Tree<T>::Node::Node(const T& _data, const Color& _color, Node* _parent):
 	parent(_parent)
 {}
 
-// -Node modifiers-------------------------------------------------------
+// -helpers--------------------------------------------------------------
 // NOTE: rotation memory ownership ensured by use of swaps
 template <typename T>
 void Tree<T>::rotate_left(Node* curr)
@@ -80,68 +79,6 @@ void Tree<T>::rotate_right(Node* curr)
 }
 
 template <typename T>
-void Tree<T>::swap(Node* A, Node* B)
-{
-	if (not A or not B) {
-		throw std::logic_error("cannot swap contents of nullptr");
-	}
-
-	// if the type T can be swapped, just swap the contents of the node since
-	// that's faster
-	if (std::is_move_constructible_v<T> and std::is_move_assignable_v<T>) {
-		std::swap(A->data, B->data);
-		return;
-	}
-
-	//...otherwise swap the pointers of the nodes around
-
-	// tell parents to point to their new children
-	std::swap(curr_owner(A), curr_owner(B));
-
-	// swap parent pointers
-	std::swap(A->parent, B->parent);
-
-	// set children's parent pointers to their new parents
-	if (A->left) {
-		A->left->parent = B;
-	}
-	if (A->right) {
-		A->right->parent = B;
-	}
-	if (B->left) {
-		B->left->parent = A;
-	}
-	if (B->right) {
-		B->right->parent = A;
-	}
-
-	// swap children
-	A->left.swap(B->left);
-	A->right.swap(B->right);
-}
-
-// -Node interrogation---------------------------------------------------
-template <typename T>
-bool Tree<T>::is_left(const Node* curr) const
-{
-	if (not (curr and curr->parent)) {
-		throw std::logic_error("current and it's parent don't both exist; undefined");
-	}
-
-	return curr == curr->parent->left.get();
-}
-
-template <typename T>
-bool Tree<T>::is_right(const Node* curr) const
-{
-	if (not (curr and curr->parent)) {
-		throw std::logic_error("current and it's parent don't both exist; undefined");
-	}
-
-	return curr == curr->parent->right.get();
-}
-
-template <typename T>
 Tree<T>::Node* Tree<T>::get_sibling(Node* curr)
 {
 	// better to throw than to return a false-positive nullptr
@@ -158,40 +95,36 @@ Tree<T>::Node* Tree<T>::get_sibling(Node* curr)
 	}
 }
 
-// owner refers to owning pointer AKA smart pointer; this function returns a
-// reference to the unique pointer that holds current
 template <typename T>
-std::unique_ptr<typename Tree<T>::Node>& Tree<T>::curr_owner(const Node* curr) const
+bool Tree<T>::is_right(const Node* curr) const
 {
-	if (not curr) {
-		throw std::logic_error("cannot evaluate path from nullptr");
+	if (not (curr and curr->parent)) {
+		throw std::logic_error("current and it's parent don't both exist; undefined");
 	}
 
-	if (not curr->parent) {
-		return root;
-	}
-	else if (is_left(curr)) {
-		return curr->parent->left;
-	}
-	else {
-		return curr->parent->right;
-	}
+	return curr == curr->parent->right.get();
 }
 
 template <typename T>
-Tree<T>::Node* Tree<T>::in_order_successor(const Node* curr) const
+bool Tree<T>::is_left(const Node* curr) const
 {
-	if (not curr) {
-		throw std::logic_error("undefined for nullptr");
+	if (not (curr and curr->parent)) {
+		throw std::logic_error("current and it's parent don't both exist; undefined");
 	}
 
-	Node* ios = curr->right.get();
-	
-	while (ios->left) {
-		ios = ios->left.get();
+	return curr == curr->parent->left.get();
+}
+
+template <typename T>
+void Tree<T>::swap(Node* A, Node* B)
+{
+	if (not A or not B) {
+		throw std::logic_error("cannot swap contents of nullptr");
 	}
 
-	return ios;
+	std::swap(A->parent, B->parent);
+	A->left.swap(B->left);
+	A->right.swap(B->right);
 }
 
 template <typename T>
