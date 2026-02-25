@@ -49,7 +49,7 @@ class Tree
 		bool is_right(const Node* curr) const;
 		Node* get_sibling(Node* curr);
 		std::unique_ptr<Node>& curr_owner(const Node* curr) const;
-		Node* in_order_successor(const Node* curr) const``;
+		Node* in_order_successor(const Node* curr) const;
 
 		// -recursive helpers------------------------------------------
 		std::size_t size(const Node* curr) const;
@@ -57,9 +57,17 @@ class Tree
 					 std::string prefix,
 					 bool is_right,
 					 bool color_info) const;
-
 		void correct_red_violation(Node* curr);
 		void get_all(const Node* curr, std::vector<T>& v) const;
+		Node* find(const T&);
+		Node* find_index(Node* curr,
+						 int& curr_index,
+						 const int i) const;
+		Node* find_index_reverse(Node* curr,
+								 int& curr_index,
+								 const int i) const;
+		void remove(Node*);
+		
 
 		// -test helpers-----------------------------------------------
 		bool TEST_all_inequal(const Node* curr) const;
@@ -81,6 +89,7 @@ class Tree
 		// -IO---------------------------------------------------------
 		void display(bool color_info=false) const;
 		std::vector<T> get_all() const;
+		T operator[](int i);
 
 		// -tests------------------------------------------------------
 		bool TEST_valid_inequality() const; // BST: left < self < right

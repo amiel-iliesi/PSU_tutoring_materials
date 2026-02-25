@@ -99,7 +99,15 @@ int main()
 	cout << "> The tree has " << tree.size() << " element(s).\n\n";
 
 	cout << "> The tree " << (tree.contains(8) ? "*does*" : "*doesn't*")
-		 << " contain the value 8.\n";
+		 << " contain the value 8.\n\n";
+
+	if (n_inserted > 0) {
+		int i_pos = gen() % n_inserted;
+		cout << "> Tree[" << i_pos << "] = " << tree[i_pos] << "\n\n";
+
+		int i_neg = -1 - (gen() % n_inserted);
+		cout << "> Tree[" << i_neg << "] = " << tree[i_neg] << '\n';
+	}
 
 
 

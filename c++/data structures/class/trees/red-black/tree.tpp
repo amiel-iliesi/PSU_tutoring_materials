@@ -195,6 +195,26 @@ Tree<T>::Node* Tree<T>::in_order_successor(const Node* curr) const
 }
 
 template <typename T>
+Tree<T>::Node* Tree<T>::find(const T& _data)
+{
+	Node* curr = root.get();
+
+	while (curr) {
+		if (_data < curr->data) {
+			curr = curr->left.get();
+		}
+		else if (_data > curr->data) {
+			curr = curr->right.get();
+		}
+		else {
+			return curr;
+		}
+	}
+
+	return nullptr;
+}
+
+template <typename T>
 void Tree<T>::correct_red_violation(Node* curr)
 {
 	/* insertion cases (according to Wikipedia):
@@ -320,8 +340,22 @@ bool Tree<T>::insert(const T& _data)
 template <typename T>
 bool Tree<T>::remove(const T& _data)
 {
-	// TODO
-	return false;
+	Node* found = root.find(_data);
+
+	if (not found) {
+		return false;
+	}
+
+	remove(found);
+
+	return true;
+}
+
+template <typename T>
+void Tree<T>::remove(Node* curr)
+{
+	// TODO:
+	return;
 }
 
 // -traits---------------------------------------------------------------
@@ -433,6 +467,74 @@ void Tree<T>::get_all(const Node* curr, std::vector<T>& v) const
 	get_all(curr->left.get(), v);
 	v.push_back(curr->data);
 	get_all(curr->right.get(), v);
+}
+
+template <typename T>
+T Tree<T>::operator[](int i)
+{
+	int curr_index = 0;
+	
+	bool reverse = i < 0;
+
+	if (reverse) {
+		i *= -1;
+		i -= 1;
+	}
+
+	Node* found = (reverse ? find_index_reverse(root.get(), curr_index, i)
+					   	   : find_index(root.get(), curr_index, i));
+	
+	if (not found) {
+		throw std::out_of_range("index is out of tree range");
+	}
+
+	return found->data;
+}
+
+template <typename T>
+Tree<T>::Node* Tree<T>::find_index(Node* curr,
+								   int& curr_index,
+								   const int i) const
+{
+	if (not curr) {
+		return nullptr;
+	}
+
+	Node* found = find_index(curr->left.get(), curr_index, i);
+	if (found) { // short circuit the right subtree if we found already
+		return found;
+	}
+
+	if (curr_index == i) {
+		return curr;
+	}
+
+	++curr_index;
+
+	return find_index(curr->right.get(), curr_index, i);
+}
+
+template <typename T>
+Tree<T>::Node* Tree<T>::find_index_reverse(Node* curr,
+								   		   int& curr_index,
+								   		   const int i) const
+{
+	if (not curr) {
+		return nullptr;
+	}
+
+	Node* found = find_index_reverse(curr->right.get(), curr_index, i);
+	if (found) { // short circuit the right subtree if we found already
+		return found;
+	}
+
+	if (curr_index == i) {
+		return curr;
+	}
+
+	++curr_index;
+
+	return find_index_reverse(curr->left.get(), curr_index, i);
 }
 
 // -tests----------------------------------------------------------------
