@@ -22,7 +22,9 @@ to become owners of the memory with the `unique_ptr` class.
 ## Construction and Destruction
 
 Because we have no more dynamic memory, we don't need custom construction and
-destruction. We can get rid of these custom rules! (See ***Rule of Zero***).
+destruction. We can get rid of these custom rules! (See
+[Rule of Zero](https://en.cppreference.com/w/cpp/language/rule_of_three.html#Rule_of_zero)
+).
 
 ## Insert and Display
 
@@ -41,6 +43,8 @@ their own. Below are diagrams of the several insertion cases, demonstrating
 what the swaps do.
 
 * [Case: Insertion Before Head](figures/case_insert_before_head.png)
+* [Case: Insertion in the Middle](figures/case_insert_inbetween.png)
+* [Case: Insertion After Tail](figures/case_insert_after_tail.png)
 
 Finally, we note that we use `unique_ptr::get()` to use the raw pointers for
 traversal. This is how we access the weak pointers for non-owning use! For
