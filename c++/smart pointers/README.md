@@ -81,6 +81,13 @@ be `weak`.
 
 <img src="figures/DLL_ownership.png" alt="DLL Diagram" width=50%>
 
+**Note:** For the DLL, notice that each resource/node/dynamic element has
+***exactly one*** owner. This is a requirement of using `unique_ptr`. It's also
+a way you can do a sanity check with a diagram, to ensure you're using your
+pointers correctly. Multiple owners with `unique_ptrs` for the same memory
+*will* give you a double-free error; how could it not, they both think they're
+the owner!
+
 For a multi-threaded queue, this example is a bit more complicated, but it's
 one of the simpler justified cases for a `shared_ptr`, so excuse the slightly
 complicated example. If a clear owner *cannot* be structurally justified, for
