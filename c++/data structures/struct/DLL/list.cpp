@@ -56,4 +56,50 @@ void display(const Node* head)
 // -predefined functions END-----------------------------------
 
 // -custom implementations here--------------------------------
+bool swap(Node* A, Node* B, Node*& head)
+{
+	// don't self-swap
+	if (A == B) {
+		return false;
+	}
+	// need two nodes
+	else if (not A or not B) {
+		return false;
+	}
+
+	Node* AP = A->prev;
+	Node* AN = A->next;
+	Node* BP = B->prev;
+	Node* BN = B->next;
+
+	// *from* our pointers
+	A->prev = BP;
+	A->next = BN;
+	B->prev = AP;
+	B->next = AN;
+
+	// *to* our pointers
+	if (AP) {
+		AP->next = B;
+	}
+	if (AN) {
+		AN->prev = B;
+	}
+	if (BP) {
+		BP->next = A;
+	}
+	if (BN) {
+		BN->prev = A;
+	}
+
+	// reassign head, if we swapped it
+	if (not A->prev) {
+		head = A;
+	}
+	if (not B->prev) {
+		head = B;
+	}
+
+	return true;
+}
 // ------------------------------------------------------------
