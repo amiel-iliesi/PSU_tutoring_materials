@@ -79,6 +79,8 @@ no ownership. For binary search trees with nodes that have a parent pointer,
 the case is similar to the DLL. Parent pointers shouldn't own, they should just
 be `weak`.
 
+![DLL Diagram](figures/DLL_ownership.png)
+
 For a multi-threaded queue, this example is a bit more complicated, but it's
 one of the simpler justified cases for a `shared_ptr`, so excuse the slightly
 complicated example. If a clear owner *cannot* be structurally justified, for
