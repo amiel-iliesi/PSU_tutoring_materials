@@ -60,3 +60,13 @@ the refactoring mindfully, and carefully, and if we go in with a plan for
 **ownership**, then the changes are actually pretty easy! So remember, always
 plan you structures regarding ownership in advance when using smart pointers,
 and you will be smooth sailing!
+
+## Note on Extra Exercises
+
+I think this DLL is fairly comprehensive for basic use cases with smart
+pointers. I think the extension to BSTs is fairly trivial, but just tedious to
+write just as an additional example. If you want an example of this in
+practical application, check out the `c++/data structures/class/red-black`
+directory for a non-guided example.
+
+In short—no extra exercises are necessary for `unique_ptr`, I think!
