@@ -40,7 +40,7 @@ reads more clearly to me than releasing and resetting manually, but to each
 their own. Below are diagrams of the several insertion cases, demonstrating
 what the swaps do.
 
-<img src='figures/case_insert_before_head.png' alt='Case: Insertion Before Head Diagram'>
+* [Case: Insertion Before Head](figures/case_insert_before_head.png)
 
 Finally, we note that we use `unique_ptr::get()` to use the raw pointers for
 traversal. This is how we access the weak pointers for non-owning use! For
