@@ -1,0 +1,163 @@
+\documentclass[letterpaper, 12pt]{article}
+
+\title{PSU CS162: Syntax Basics \color{red}\textbf{[KEY]}\normalcolor}
+\author{Amiel L. Iliesi}
+\date{2026-03-27}
+
+\usepackage{tabularx}
+\usepackage[hidelinks]{hyperref}
+\usepackage{minted}
+\usepackage[x11names]{xcolor}
+\usepackage{amssymb}
+\usepackage{ulem}
+
+% commands
+\newcommand{\question}[2][2em]{\textbf{#2}\vspace{#1}\par}
+\newcommand{\ans}[1]{\color{Green4}\textbf{#1}\normalcolor}
+
+% environments
+\newenvironment{ansblock}{\color{Green4}}{\normalcolor\vspace{1em}}
+
+% global options
+\setlength{\parindent}{0pt}
+\usemintedstyle{monokai}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\pagebreak
+
+\section{Python Basics}
+
+\textbf{\emph{Write Python code that does the following...}}
+
+\vspace{2em}
+
+\question[0pt]{Initialize a variable with your name, and print out
+    \texttt{"Hello, <your name>"}.}
+
+\begin{minted}[bgcolor=darkgray]{python}
+name = "Amiel"
+print("Hello, " + name)
+\end{minted}
+
+\question[0pt]{Set up a main call and print \texttt{"Hello, World!"}.}
+
+\begin{minted}[bgcolor=darkgray]{python}
+if __name__ == "__main__":
+    print("Hello, World!")
+\end{minted}
+
+\question[0pt]{Save a string of your choice to a variable. Write a conditional statement
+    that prints if the saved string is either \texttt{"String A"},
+    \texttt{"String B"}, or none of the above.}
+
+\begin{minted}[bgcolor=darkgray]{python}
+my_string = "Whatever I want!"
+
+if my_string == "String A":
+    print(my_string + " matches \"String A\"!")
+elif my_string == "String B":
+    print(my_string + " matches \"String B\"!")
+else:
+    print(my_string + " doesn't match any of the above...")
+\end{minted}
+
+
+\begin{minipage}{\textwidth}
+\question{Connect the following operations to their definition.}
+\begin{tabularx}{0.95\linewidth}{| X | X |}
+    \hline
+    \textbf{a.} \texttt{*} & exponentiation \hfill \ans{f.}\\
+    \hline
+    \textbf{b.} \texttt{/} & modulo assignment \hfill \ans{d.}\\
+    \hline
+    \textbf{c.} \texttt{+=} & addition assignment \hfill \ans{c.} \\
+    \hline
+    \textbf{d.} \texttt{\%=} & integer division \hfill \ans{g.} \\
+    \hline
+    \textbf{e.} \texttt{\^} & float division \hfill \ans{b.} \\
+    \hline
+    \textbf{f.} \texttt{**} & bitwise exclusive-or \hfill \ans{e.} \\
+    \hline
+    \textbf{g.} \texttt{//} & multiplication \hfill \ans{a.} \\
+    \hline
+\end{tabularx}
+\end{minipage}
+
+\pagebreak
+
+\section{C++ Basics}
+
+\question[0em]{Write the setup for the \texttt{main} function.}
+
+\begin{minted}[bgcolor=darkgray]{c++}
+int main()
+{
+    return 0;
+}
+\end{minted}
+
+\question[0em]{Write a function that returns the square of the input.}
+
+\begin{minted}[bgcolor=darkgray]{c++}
+int square(int x)
+{
+    return x * x;
+}
+\end{minted}
+
+\question[0em]{Output \texttt{"Hello, World!"}.}
+
+\begin{minted}[bgcolor=darkgray]{c++}
+std::cout << "Hello, World!" << std::endl;
+\end{minted}
+
+\question[0em]{Explain the difference between a function implementation and a
+    function prototype.}
+\begin{ansblock}
+A \uline{function implementation} describes \textbf{how} a function works,
+and a \uline{function prototype} describes the \textbf{call signature}.
+\end{ansblock}
+
+\question[0em]{What is a function signature?}
+\begin{ansblock}
+A \uline{function signature} are the parts that \textbf{uniquely identify}
+one function from another. In C++ the signature is the combination of the
+\textbf{function name} with the
+\textbf{function parameters: number of, types, and order}.
+\end{ansblock}
+
+\question[0em]{Write the bash command to compile \texttt{main.cpp} into \texttt{main.out}}
+\begin{minted}[bgcolor=lightgray]{bash}
+g++ main.cpp -o main.out
+\end{minted}
+
+\section{C++ VS. Python}
+
+\begin{tabular}{| l | c | c | c |}
+    \hline
+    \textbf{feature} & \textbf{Python?} & \textbf{C++?} \\
+    \hline
+    Code scope is indent sensitive & \ans{\checkmark} & \\
+    \hline
+    Code scope is braced & & \ans{\checkmark} \\
+    \hline
+    Strings can use either single or double quote & \ans{\checkmark} & \\
+    \hline
+    Strings are double quote, chars are single quote & & \ans{\checkmark} \\
+    \hline
+    Loosely typed & \ans{\checkmark} & \\
+    \hline
+    Strongly typed & & \ans{\checkmark} \\
+    \hline
+    Interpreted & \ans{\checkmark} & \\
+    \hline
+    Compiled & & \ans{\checkmark} \\
+    \hline
+\end{tabular}
+
+\end{document}

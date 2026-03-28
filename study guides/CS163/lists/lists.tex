@@ -1,0 +1,60 @@
+\documentclass[12pt, letterpaper]{article}
+
+\title{Lists}
+\author{Amiel L. Iliesi}
+\date{2026-03-27}
+
+% packages
+\usepackage[hidelinks]{hyperref}
+
+% commands
+\newcommand{\question}[2][4em]{\textbf{#2}\vspace{#1}\par}
+
+% global settings
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\pagebreak
+\section{Nodes}
+\question{What is the point of a node?}
+
+\question{What is the general structure of any node?}
+
+\question{Where are nodes used?}
+
+\pagebreak
+\section{Lists in General}
+\question{Give a short description of lists in general, and describe their pros
+and cons compared to contiguous containers like \texttt{arrays} and
+\texttt{std::vectors}.}
+
+\pagebreak
+\section{Linearly Linked Lists}
+\question{What is unique to Linearly Linked Lists?}
+
+\question[12em]{Draw a simple 4 element LLL. Label its parts.}
+
+\pagebreak
+\section{Doubly Linked Lists}
+\question{What is unique to Doubly Linked Lists?}
+
+\question[12em]{Draw a simple 3 element DLL. Label its parts.}
+
+\question[12em]{What are the three \textit{main} unique cases for removal in a
+DLL? Describe the removal process for each case, in plain english.}
+
+\pagebreak
+\section{Circularly Linked Lists}
+\question{What is unique to Circularly Linked Lists?}
+
+\question[12em]{Draw a 5 element CLL. Label its parts.}
+
+\question[8em]{What is difficult about iterating over a CLL? Describe the
+process in english.}
+
+\end{document}

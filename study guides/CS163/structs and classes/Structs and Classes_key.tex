@@ -1,0 +1,103 @@
+\documentclass[12pt, letterpaper]{article}
+
+\title{Structs and Classes \color{red}\textbf{[KEY]}}
+\author{Amiel L. Iliesi}
+\date{2026-03-27}
+
+% packages
+\usepackage[hidelinks]{hyperref}
+\usepackage[x11names]{xcolor}
+
+% new commands
+\newcommand{\question}[1]{\textbf{#1}\par}
+\newcommand{\answer}[1]{\color{Green4}\textbf{#1}\normalcolor}
+
+% new environments
+\newenvironment{answerblock}{\color{Green4}}{\normalcolor\vspace{1em}}
+
+% global settings
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.5em}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\pagebreak
+\section{Access Specifiers}
+
+\question{What are the three access specifiers in C++?}
+\begin{answerblock}
+\begin{itemize}
+    \item public
+    \item protected
+    \item private
+\end{itemize}
+\end{answerblock}
+
+\question{What effect do they have within the class definition?}
+\begin{answerblock}
+\begin{tabular}{| l | p{0.8\textwidth} |}
+    \hline
+    public & members are freely accessed inside and outside of the class \\
+    \hline
+    protected & members are freely accessed inside of the class, and its
+    descendants; don't worry about this until CS302, it has to do with inheritance \\
+    \hline
+    private & members are freely accessed only within the class itself \\
+    \hline
+\end{tabular}
+\end{answerblock}
+
+\question{What is their semantic purpose?}
+\begin{answerblock}
+\begin{tabular}{| l | p{0.8\textwidth} |}
+    \hline
+    public & this is how the world at large interacts with your class \\
+    \hline
+    protected & these are for utilities for descendants to use within the
+    class, freely \\
+    \hline
+    private & the world outside your class should not take notice of these at
+    all \\
+    \hline
+\end{tabular}
+\end{answerblock}
+
+\pagebreak
+\section{Structs}
+
+\question{What is a struct?}
+\begin{answerblock}
+A struct is a transparent collection of objects, data, and member functions.
+\end{answerblock}
+
+\question{What features do structs have access to?}
+\begin{answerblock}
+Constructors, destructors, member functions, member objects, access
+specification, inheritance.
+\end{answerblock}
+
+\pagebreak
+\section{Classes}
+
+\question{What is a class?}
+\begin{answerblock}
+A class is an opaque collection of objects, data, and member functions.
+\end{answerblock}
+
+\question{What features do classes have access to?}
+\begin{answerblock}
+Constructors, destructors, member functions, member objects, access
+specification, inheritance.
+\end{answerblock}
+
+\question{What makes structs and classes different?}
+\begin{answerblock}
+Only that classes are private by default and structs are public. Nothing else
+\emph{at all}.
+\end{answerblock}
+
+\end{document}

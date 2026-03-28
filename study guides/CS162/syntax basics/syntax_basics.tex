@@ -1,0 +1,102 @@
+\documentclass[letterpaper, 12pt]{article}
+
+\title{PSU CS162: Syntax Basics}
+\author{Amiel L. Iliesi}
+\date{2026-03-27}
+
+\usepackage{tabularx}
+\usepackage[hidelinks]{hyperref}
+
+% commands
+\newcommand{\question}[2][2em]{\textbf{#2}\vspace{#1}\par}
+
+% global options
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\pagebreak
+
+\section{Python Basics}
+
+\textbf{\emph{Write Python code that does the following...}}
+
+\vspace{2em}
+
+\question[5em]{Initialize a variable with your name, and print out
+    \texttt{"Hello, <your name>"}.}
+
+\question[8em]{Set up a main call and print \texttt{"Hello, World!"}.}
+
+\question[12em]{Save a string of your choice to a variable. Write a conditional statement
+    that prints if the saved string is either \texttt{"String A"},
+    \texttt{"String B"}, or none of the above.}
+
+
+\begin{minipage}{\textwidth}
+\question{Connect the following operations to their definition.}
+\begin{tabularx}{0.95\linewidth}{| X | X |}
+    \hline
+    \textbf{a.} \texttt{*} & exponentiation \\
+    \hline
+    \textbf{b.} \texttt{/} & modulo assignment \\
+    \hline
+    \textbf{c.} \texttt{+=} & addition assignment \\
+    \hline
+    \textbf{d.} \texttt{\%=} & integer division \\
+    \hline
+    \textbf{e.} \texttt{\^} & float division \\
+    \hline
+    \textbf{f.} \texttt{**} & bitwise exclusive-or \\
+    \hline
+    \textbf{g.} \texttt{//} & multiplication \\
+    \hline
+\end{tabularx}
+\end{minipage}
+
+\pagebreak
+
+\section{C++ Basics}
+
+\question[10em]{Write the setup for the \texttt{main} function.}
+
+\question[8em]{Write a function that returns the square of the input.}
+
+\question[4em]{Output \texttt{"Hello, World!"}.}
+
+\question[4em]{Explain the difference between a function implementation and a
+    function prototype.}
+
+\question[4em]{What is a function signature?}
+
+\question{Write the bash command to compile \texttt{main.cpp} into \texttt{main.out}}
+
+\section{C++ VS. Python}
+
+\begin{tabular}{| l | c | c | c |}
+    \hline
+    \textbf{feature} & \textbf{Python?} & \textbf{C++?} \\
+    \hline
+    Code scope is indent sensitive & & \\
+    \hline
+    Code scope is braced & & \\
+    \hline
+    Strings can use either single or double quote & & \\
+    \hline
+    Strings are double quote, chars are single quote & & \\
+    \hline
+    Loosely typed & & \\
+    \hline
+    Strongly typed & & \\
+    \hline
+    Interpreted & & \\
+    \hline
+    Compiled & & \\
+    \hline
+\end{tabular}
+
+\end{document}

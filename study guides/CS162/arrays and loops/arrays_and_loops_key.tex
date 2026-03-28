@@ -1,0 +1,115 @@
+\documentclass[12pt, letterpaper]{article}
+
+\title{CS162: Arrays and Loops \color{red}\textbf{[KEY]}}
+\author{Amiel L. Iliesi}
+\date{2026-03-27}
+
+% packages
+\usepackage[hidelinks]{hyperref}
+\usepackage{ulem}
+\usepackage{minted}
+\usepackage[x11names]{xcolor}
+
+% commands
+\newcommand{\question}[1]{\textbf{#1}\par}
+\newcommand{\ans}[1]{\color{Green4}\textbf{#1}\normalcolor}
+
+% environments
+\newenvironment{ansblock}{\color{Green4}}{\normalcolor}
+\usemintedstyle{monokai}
+
+% global options
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\pagebreak
+\section{Arrays}
+
+\subsection{Basic Arrays}
+\question{Initialize an array with the values \texttt{\{1, 2, 3, 4\}}.}
+
+\begin{minted}[bgcolor=darkgray]{cpp}
+int ints[] = {1, 2, 3, 4};
+\end{minted}
+
+\question{Declare an integer array with room for 3 values. Then in individual
+assignment statements, set each element to the first 3 square numbers.}
+
+\begin{minted}[bgcolor=darkgray]{cpp}
+int ints[3];
+ints[0] = 1;
+ints[1] = 4;
+ints[2] = 9;
+\end{minted}
+
+\subsection{Character Arrays}
+
+\question{Set a character array to say \texttt{"Hello, World"}.}
+
+\begin{minted}[bgcolor=darkgray]{cpp}
+char str[] = "Hello, World!";
+\end{minted}
+
+\question{Declare a chracter array with enough room to hold the phrase
+\texttt{"Hi"}. Then manually set each character to make a valid c-string.}
+
+\begin{minted}[bgcolor=darkgray]{cpp}
+char str[3];
+str[0] = 'H';
+str[1] = 'i';
+str[2] = '\0';
+\end{minted}
+
+\pagebreak
+\section{Loops}
+
+\subsection{While Loops}
+\question{Given a c-string with the name \texttt{str}, use a \uline{while} loop
+to count the number of a's in the string.}
+
+\begin{minted}[bgcolor=darkgray]{cpp}
+int i = 0;
+unsigned a_cnt = 0;
+while (str[i] != '\0') {
+    if (str[i] == 'a') {
+        ++a_cnt;
+    }
+    ++i;
+}
+\end{minted}
+
+\subsection{Do-While Loops}
+\question{Let the user enter sentences. Output them back to the user but in
+quotes. Stop when they say they are finished. Use a \uline{do-while} loop.}
+
+\begin{minted}[bgcolor=darkgray]{cpp}
+char str[256];
+char choice;
+do {
+    std::cin.getline(str, 256);
+    std::cout << '"' << str << '"' << std::endl;
+    std::cout << "again? (y/n): ";
+    std::cin.get(choice);
+    std::cin.ignore(256);
+} while (choice == 'y');
+\end{minted}
+
+\subsection{For Loops}
+\begin{minipage}{\textwidth}
+\question{Given an array of integers named \texttt{ints}, and an
+\texttt{unsigned int} denoting the array size named \texttt{ints\_size}, square
+the elements, in-place, using a \uline{for} loop.}
+
+\begin{minted}[bgcolor=darkgray]{cpp}
+for (unsigned i = 0; i < ints_size; ++i) {
+    ints[i] = ints[i] * ints[i];
+}
+\end{minted}
+\end{minipage}
+
+\end{document}

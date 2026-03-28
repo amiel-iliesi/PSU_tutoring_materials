@@ -1,0 +1,73 @@
+\documentclass[12pt, letterpaper]{article}
+
+\title{Recursion}
+\author{Amiel L. Iliesi}
+\date{2026-03-27}
+
+% packages
+\usepackage[hidelinks]{hyperref}
+\usepackage[x11names]{xcolor}
+\usepackage{minted}
+
+% new commands
+\newcommand{\question}[2][4em]{\textbf{#2}\vspace{#1}\par}
+\newcommand{\answer}[1]{\color{Green4}\textbf{#1}\normalcolor}
+
+% new environments
+\newenvironment{answerblock}{\color{Green4}}{\normalcolor}
+
+% global settings
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.5em}
+\usemintedstyle{monokai}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\pagebreak
+\section{Terminology}
+
+\question{What are base cases?}
+
+\question{What are recursive cases?}
+
+\question{What is recursive depth? Stack depth?}
+
+\question[12em]{Describe the differences between preorder, in-order, and postorder
+traversal. Also, which are synonyms with head recursion, and tail recursion?}
+
+\question{When possible, why is \emph{tail recursion} preferable?}
+
+\pagebreak
+\section{Conversion From Iteration to Recrusion}
+
+\question[0em]{Convert the following into a recursive function.}
+
+\begin{minted}[style=bw]{cpp}
+int sum = 0;
+for (int i = 1; i < N; ++i) {
+    sum += i;
+}
+\end{minted}
+\vspace{14em}
+
+\question{What parts can you systematically translate? Identify the
+relationship these pieces dictate between recursion and iteration.}
+
+\pagebreak
+\section{Uniquely Recursive}
+
+\question{Describe the relationship between recursion and iteration.}
+
+\question{To expand on the previous question, what can recursion do that
+iteration cannot?--and vice versa.}
+
+\question{Why is iteration preferable when possible?}
+
+\question{What situations can have a iterative \textit{and} recursive solution,
+but have the recursive solution be preferable?}
+
+\end{document}

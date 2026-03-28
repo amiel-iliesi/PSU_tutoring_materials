@@ -1,0 +1,55 @@
+\documentclass[12pt, letterpaper]{article}
+
+\title{CS162: Arrays and Loops}
+\author{Amiel L. Iliesi}
+\date{2026-03-27}
+
+% packages
+\usepackage[hidelinks]{hyperref}
+\usepackage{ulem}
+
+% commands
+\newcommand{\question}[2][4em]{\textbf{#2}\vspace{#1}\par}
+
+% global options
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\pagebreak
+\section{Arrays}
+
+\subsection{Basic Arrays}
+\question{Initialize an array with the values \texttt{\{1, 2, 3, 4\}}.}
+
+\question[8em]{Declare an integer array with room for 3 values. Then in individual
+assignment statements, set each element to the first 3 square numbers.}
+
+\subsection{Character Arrays}
+
+\question{Set a character array to say \texttt{"Hello, World"}.}
+
+\question[8em]{Declare a chracter array with enough room to hold the phrase
+\texttt{"Hi"}. Then manually set each character to make a valid c-string.}
+
+\pagebreak
+\section{Loops}
+
+\subsection{While Loops}
+\question[6em]{Given a c-string with the name \texttt{str}, use a \uline{while} loop
+to count the number of a's in the string.}
+
+\subsection{Do-While Loops}
+\question[8em]{Let the user enter sentences. Output them back to the user but in
+quotes. Stop when they say they are finished. Use a \uline{do-while} loop.}
+
+\subsection{For Loops}
+\question{Given an array of integers named \texttt{ints}, and an
+\texttt{unsigned int} denoting the array size named \texttt{ints\_size}, square
+the elements, in-place, using a \uline{for} loop.}
+
+\end{document}

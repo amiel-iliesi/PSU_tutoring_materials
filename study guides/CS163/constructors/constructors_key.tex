@@ -1,0 +1,200 @@
+\documentclass[letterpaper, 12pt]{article}
+
+\title{Constructors \color{red}\textbf{[KEY]}}
+\author{Amiel L. Iliesi}
+\date{2026-03-27}
+
+% packages
+\usepackage[hidelinks]{hyperref}
+\usepackage[x11names]{xcolor}
+\usepackage{minted}
+\usepackage{ulem}
+
+% commands
+\newcommand{\question}[1]{\textbf{#1}\par}
+\newcommand{\ans}[1]{\color{Green4}\textbf{#1}\normalcolor}
+
+% global options
+\setlength{\parindent}{0pt}
+\usemintedstyle{monokai}
+
+% environments
+\newenvironment{ansblock}{\color{Green4}}{\normalcolor\vspace{1em}}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\pagebreak
+\section{Dynamic Memory}
+
+\subsection{Dynamic Element}
+\question{How do you initialize a single element of type \texttt{T}?}
+\begin{minted}[bgcolor=darkgray]{cpp}
+T* value = new T;
+\end{minted}
+
+\question{How do you deallocate that same element?}
+\begin{minted}[bgcolor=darkgray]{cpp}
+delete value;
+\end{minted}
+
+\question{When do you deallocate that element?}
+\begin{ansblock}
+When its use is over.
+\end{ansblock}
+
+\subsection{Dynamic Array}
+\question{How do you initialize an array of length \texttt{N}, of type
+\texttt{T}?}
+
+\begin{minted}[bgcolor=darkgray]{cpp}
+T* values = new T[N];
+\end{minted}
+
+\question{How do you deallocate that array?}
+
+\begin{minted}[bgcolor=darkgray]{cpp}
+delete [] values;
+\end{minted}
+
+\pagebreak
+\section{Constructors}
+
+\subsection{Rule of Three}
+\question{Describe the rule of three}
+\begin{ansblock}
+If you need any of: \uline{destructor}, \uline{copy constructor}, 
+\uline{copy assignment operator}, then you most likely need all three.
+\end{ansblock}
+
+\question{\textit{[extra credit]:} Describe the rule of five, and the rule of
+zero, if you know them.}
+
+\begin{ansblock}
+\textbf{Rule of Five}: Same as rule of three, except if you need move
+semantics, then the \uline{move constructor} and the
+\uline{move copy assignment operator} also need to be implemented.
+
+\vspace{1em}
+
+\textbf{Rule of Zero}: Don't use raw memory to begin with, if possible. Use
+other containers, and standard library memory management practices instead. If you
+do need to use raw memory, then memory ownership should be all you do.
+\end{ansblock}
+
+\subsection{Default Constructor}
+\question{What is the default construtor?}
+\begin{ansblock}
+It's the constructor that gets called when no arguments are supplied.
+\end{ansblock}
+
+\question{What are the two ways a default constructor can become unavailable?}
+\begin{ansblock}
+\begin{enumerate}
+    \item Alternative construtors are supplied (EG: copy constructor,
+    parameterized construtor).
+    \item It is explicitly removed, like so:
+    \begin{minted}[bgcolor=darkgray]{cpp}
+T::T() = delete;
+    \end{minted}
+\end{enumerate}
+\end{ansblock}
+
+\begin{minipage}{\textwidth}
+\question{How can you ask the program that default constructor be
+re-established?}
+\begin{ansblock}
+By invoking the generation of the default constructor, like so:
+\begin{minted}[bgcolor=darkgray]{cpp}
+T::T() = default;
+\end{minted}
+\end{ansblock}
+\end{minipage}
+
+\subsection{Copy Constructor}
+\question{What is a copy constructor?}
+\begin{ansblock}
+It is the constructor invoked when the object is set to another of the same
+type on declaration. It copies all members from the other object.
+\end{ansblock}
+
+\question{Given that you have a type \texttt{T}, with a dynamic member
+\texttt{int x}, write a copy constructor for \texttt{T}.}
+\begin{minted}[bgcolor=darkgray]{cpp}
+void T::T(const T& other) {
+    x = new int;
+    x = other.x;
+}
+\end{minted}
+
+\subsection{Copy Assignment Operator}
+\question{Given a type \texttt{T}, write the prototype for its copy assignment
+operator.}
+\begin{minted}[bgcolor=darkgray]{cpp}
+void T::operator=(const T& other);
+\end{minted}
+
+\question{What is the difference between a copy constructor, and a copy
+assignment operator?}
+\begin{ansblock}
+The difference is \textit{when} they are expected to be called, and as a
+result, what data they are expected to have. A copy construtor is always called
+when the object is totally new, so it it's definitely empty. copy assignment on
+the other hand can happen at any point in the object's life cycle, so it might
+have data you have to clear before overwriting.
+\end{ansblock}
+
+\subsection{Parameterized Constructors}
+\question{What is a parameterized constructor?}
+\begin{ansblock}
+It's any constructor that takes parameters. There are no restrictions to
+parameters, in number or type.
+
+\vspace{1em}
+
+For example, a copy constructor is one example of a parameterized constructor;
+its paramter is another objecct of the same class type.
+\end{ansblock}
+
+\question{If I had a type \texttt{T} with members \texttt{char c}, and
+\texttt{int x}, how would you make a parameterized constructor that sets all of
+\texttt{T}'s members?}
+
+\begin{minted}[bgcolor=darkgray]{cpp}
+T::T(const char& _c, const int& _x) {
+    c = _c;
+    x = _x;
+}
+\end{minted}
+
+\pagebreak
+\section{Destructors}
+\question{What is a destructor? What is its purpose?}
+\begin{ansblock}
+Whenever you have \emph{dynamic memory}, its life-cycle can't be automatically
+determined. So it comes down to the user to make that manual determination. The
+destructor says what happens when it's destructed, and the \texttt{delete}
+invocation says \emph{when} that happens.
+\end{ansblock}
+
+\question{When do you need a destructor?}
+\begin{ansblock}
+When you have dynamic memory.
+\end{ansblock}
+
+\question{How do you invoke a destructor?}
+\begin{ansblock}
+When the object is \textbf{static}, it is automatically invoked when it goes
+\emph{out of scope}.
+
+\vspace{1em}
+
+When the object is \textbf{dynamic}, it is invoked when it is
+\emph{deallocated}, either by single deletion (\texttt{delete}), or array
+deletion (\texttt{delete[]}).
+\end{ansblock}
+
+\end{document}

@@ -1,0 +1,163 @@
+\documentclass[12pt, letterpaper]{article}
+
+\title{Recursion \color{red}\textbf{[KEY]}\normalcolor}
+\author{Amiel L. Iliesi}
+\date{2026-03-27}
+
+% packages
+\usepackage[hidelinks]{hyperref}
+\usepackage[x11names]{xcolor}
+\usepackage{minted}
+
+% new commands
+\newcommand{\question}[1]{\textbf{#1}\par}
+\newcommand{\answer}[1]{\color{Green4}\textbf{#1}\normalcolor}
+
+% new environments
+\newenvironment{answerblock}{\color{Green4}}{\normalcolor\vspace{1em}}
+
+% global settings
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.5em}
+\usemintedstyle{monokai}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\pagebreak
+\section{Terminology}
+
+\question{What are base cases?}
+\begin{answerblock}
+Base cases are similar to your iterative looping condition. They are kind of
+inverse though, since your iterative condition tells you when to
+\emph{keep looping}, whereas your base cases for recursion tell you when to
+\emph{stop looping}.
+\end{answerblock}
+
+\question{What are recursive cases?}
+\begin{answerblock}
+These have no direct analog to iteration. They are your looping condition.
+They are separate from base cases, because--in recursion--your reasons to go,
+and reasons to stop, aren't necessarily the same.
+\end{answerblock}
+
+\question{What is recursive depth? Stack depth?}
+\begin{answerblock}
+Recursive depth is how many function calls deep you currently are. Stack-depth
+is related and closely coupled; it is how many function calls on the underlying
+stack you're in. Unless your compiler does something smart, they are usually
+the same.
+\end{answerblock}
+
+\question{Describe the differences between preorder, in-order, and postorder
+traversal. Also, which are synonyms with head recursion, and tail recursion?}
+
+\begin{answerblock}
+Preorder means you loop before \emph{(pre)} doing the work in your function.
+
+In-order means that--if your data structure has an ordering--you recurse on
+anything that comes before you, then when you are about to execute the current
+node relative to the ordering \emph{(in-order)}, you do your work, and finally
+continue to the rest of the connections. This doesn't apply to recursion with
+lists.
+
+Postorder means you loop after \emph{(post)} doing all the work in your
+function.
+
+Tail recursion and postorder traveral are synonyms. Head recursion and preorder
+traversal are synonyms.
+\end{answerblock}
+
+\begin{minipage}{\textwidth}
+\question{When possible, why is \emph{tail recursion} preferable?}
+\begin{answerblock}
+Because tail recursion can be directly and systematically converted to
+iteration, which your compiler can do for you automatically.
+\end{answerblock}
+\end{minipage}
+
+\pagebreak
+\section{Conversion From Iteration to Recrusion}
+
+\question{Convert the following into a recursive function.}
+
+\begin{minted}[style=bw]{cpp}
+int sum = 0;
+for (int i = 1; i < N; ++i) {
+    sum += i;
+}
+\end{minted}
+
+\begin{minted}[bgcolor=darkgray]{cpp}
+int sum(int i, int N) {
+    if (i > N) {
+        return 0;
+    }
+    else if (i == N) {
+        return i;
+    }
+    else {
+        return i + sum(i+1, N);
+    }
+}
+\end{minted}
+
+\question{What parts can you systematically translate? Identify the
+relationship these pieces dictate between recursion and iteration.}
+
+\begin{answerblock}
+    You can translate \emph{all parts}. Iteration can \emph{always} be
+    converted to recursion.
+
+    \begin{itemize}
+        \item state variables \(\rightarrow\) parameters
+        \item accumulators \(\rightarrow\) return values
+        \item loop conditions \(\rightarrow\) base cases
+    \end{itemize}
+\end{answerblock}
+
+\pagebreak
+\section{Uniquely Recursive}
+
+\question{Describe the relationship between recursion and iteration.}
+
+\begin{answerblock}
+In terms of capability, iteration is a subset of recursion. Recursion can do
+everything iteration can, and more.
+\end{answerblock}
+
+\question{To expand on the previous question, what can recursion do that
+iteration cannot?--and vice versa.}
+
+\begin{answerblock}
+There is nothing iteration can do that recursion cannot. However, recursion
+has things it can do that recursion cannot.
+
+Recursion is capable of both backtracking, and branching. Both of which are
+impossible in iteration without auxiliary data structures. 
+\end{answerblock}
+
+\question{Why is iteration preferable when possible?}
+
+\begin{answerblock}
+Because iteration incurs no operational and memory overhead. IE it is
+generally faster.
+
+Less measurably, iteration is usually more readable, and always more simple to
+debug.
+\end{answerblock}
+
+\question{What situations can have a iterative \textit{and} recursive solution,
+but have the recursive solution be preferable?}
+
+\begin{answerblock}
+There are some situations where a recursive solution is a much more natural
+fit. In that case, it might be worth the performance cost to have something
+more readable for your coworkers or peers.
+\end{answerblock}
+
+\end{document}

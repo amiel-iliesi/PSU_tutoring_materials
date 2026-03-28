@@ -1,0 +1,81 @@
+\documentclass[letterpaper, 12pt]{article}
+
+\title{Constructors}
+\author{Amiel L. Iliesi}
+\date{2026-03-27}
+
+% packages
+\usepackage[hidelinks]{hyperref}
+
+% commands
+\newcommand{\question}[2][4em]{\textbf{#2}\vspace{#1}\par}
+
+% global options
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\pagebreak
+\section{Dynamic Memory}
+
+\subsection{Dynamic Element}
+\question{How do you initialize a single element of type \texttt{T}?}
+\question{How do you deallocate that same element?}
+\question{When do you deallocate that element?}
+
+\subsection{Dynamic Array}
+\question{How do you initialize an array of length \texttt{N}, of type
+\texttt{T}?}
+
+\question{How do you deallocate that array?}
+
+\pagebreak
+\section{Constructors}
+
+\subsection{Rule of Three}
+\question{Describe the rule of three}
+
+\question{\textit{[extra credit]:} Describe the rule of five, and the rule of
+zero, if you know them.}
+
+\subsection{Default Constructor}
+\question{What is the default construtor?}
+
+\question{What are the two ways a default constructor can become unavailable?}
+
+\question{How can you ask the program that default constructor be
+re-established?}
+
+\subsection{Copy Constructor}
+\question{What is a copy constructor?}
+
+\question{Given that you have a type \texttt{T}, with a dynamic member
+\texttt{int x}, write a copy constructor for \texttt{T}.}
+
+\subsection{Copy Assignment Operator}
+\question{Given a type \texttt{T}, write the prototype for its copy assignment
+operator.}
+
+\question{What is the difference between a copy constructor, and a copy
+assignment operator?}
+
+\subsection{Parameterized Constructors}
+\question{What is a parameterized constructor?}
+
+\question{If I had a type \texttt{T} with members \texttt{char c}, and
+\texttt{int x}, how would you make a parameterized constructor that sets all of
+\texttt{T}'s members?}
+
+\pagebreak
+\section{Destructors}
+\question{What is a destructor? What is its purpose?}
+
+\question{When do you need a destructor?}
+
+\question{How do you invoke a destructor?}
+
+\end{document}
