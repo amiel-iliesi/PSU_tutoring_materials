@@ -1,0 +1,68 @@
+\documentclass[12pt, letterpaper]{article}
+
+\title{CS302: Testing}
+\author{Amiel L. Iliesi}
+\date{2026-04-08}
+
+% packages
+\usepackage[hidelinks]{hyperref}
+\usepackage[x11names]{xcolor}
+
+% new commands
+\newcommand{\question}[2][4em]{\textbf{#2}\vspace{#1}\par}
+\newcommand{\answer}[1]{\color{Green4}\textbf{#1}\normalcolor}
+
+% new environments
+\newenvironment{answerblock}{\color{Green4}}{\normalcolor\vspace{1em}}
+
+% global settings
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.5em}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\pagebreak
+\section{Testing Data Structures}
+
+\question[8em]{In the following sections we will outline a few ways to test data
+structures. What do the tests tell us about our data structure, if they all
+pass?}
+
+\question[8em]{What might happen if we forgo testing our data structures? What
+benefits does testing give to us programmers \emph{while} we are building the
+data structure?}
+
+\pagebreak
+\section{Blackbox}
+
+\question[12em]{Describe blackbox testing. What does it test, what is known while
+testing?}
+
+\question[12em]{If you wanted to blackbox test a balanced binary tree, what are some
+tests you could implement?}
+
+\pagebreak
+\section{Glassbox}
+
+\question[12em]{Describe glassbox testing. What does it test, what is known while
+testing?}
+
+\question[12em]{If you wanted to glassbox test a balanced binary tree, what are some
+tests you could implement?}
+
+\pagebreak
+\section{Unit Testing}
+
+\question[8em]{What is the point of unit testing? Describe an environment where you
+would see this, and the purpose it fulfills.}
+
+\question[20em]{Write a basic unit test, and show it's execution. Do this
+however you like, C++, Python, pseudocode, just be specific.}
+
+\question{BONUS: do you know the other big two types of software testing?}
+
+\end{document}

@@ -1,0 +1,80 @@
+\documentclass[12pt, letterpaper]{article}
+
+\title{CS302: Error Handling}
+\author{Amiel L. Iliesi}
+\date{2026-03-30}
+
+% packages
+\usepackage[hidelinks]{hyperref}
+\usepackage[x11names]{xcolor}
+
+% new commands
+\newcommand{\question}[2][4em]{\textbf{#2}\vspace{#1}\par}
+\newcommand{\answer}[1]{\color{Green4}\textbf{#1}\normalcolor}
+
+% new environments
+\newenvironment{answerblock}{\color{Green4}}{\normalcolor\vspace{1em}}
+
+% global settings
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.5em}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\pagebreak
+\section{C Style: Error Codes}
+
+\question{How do C-style programs and functions typically indicate errors?}
+
+\question{What are some pros and cons to this approach? Why and how does modern
+error handling differ?}
+
+\pagebreak
+\section{C++}
+
+\subsection{\texttt{stdexcept} and \texttt{throw}}
+
+\question{What is \texttt{stdexcept}? Give a few examples.}
+
+\question{What does the \texttt{throw} keyword do? How is this different from
+\texttt{return}?}
+
+\question{What if \texttt{stdexcept} doesn't have what we need? How would you
+write something more specific to your needs?}
+
+\subsection{\texttt{try}/\texttt{catch}}
+
+\question{What are \texttt{try} and \texttt{catch}?}
+
+\question{What are the \emph{three} parameter formats you can specify for
+\texttt{catch}?}
+
+\subsection{Errors as Return Values, and \texttt{std::expected}}
+
+\textbf{NOTE: you may not need to know this for class, but it's good to know
+for modern error handling practices.}
+
+\question{What is an \emph{error as return value}? Describe the pros and cons
+to this approach. Also show a simple example of {\lq{throwing}\rq}  an error value with
+\texttt{std::expected}.}
+
+\pagebreak
+\section{Python}
+
+\subsection{Raise}
+
+\question{What are the differences between Python's \texttt{raise}, and C++'s
+\newline\texttt{throw}?}
+
+\question{What types of exceptions can you throw in Python? How can you define
+more--if needed?}
+
+\subsection{\texttt{try}/\texttt{except}/\texttt{else}/\texttt{finally}}
+
+\question{Explain these four keywords.}
+
+\end{document}

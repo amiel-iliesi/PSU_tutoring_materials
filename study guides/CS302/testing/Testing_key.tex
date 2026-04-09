@@ -1,0 +1,178 @@
+\documentclass[12pt, letterpaper]{article}
+
+\title{CS302: Testing \color{red}\textbf{[KEY]}\normalcolor}
+\author{Amiel L. Iliesi}
+\date{2026-04-08}
+
+% packages
+\usepackage[hidelinks]{hyperref}
+\usepackage[x11names]{xcolor}
+\usepackage{minted}
+
+% new commands
+\newcommand{\question}[1]{\textbf{#1}\par}
+\newcommand{\answer}[1]{\color{Green4}\textbf{#1}\normalcolor}
+
+% new environments
+\newenvironment{answerblock}{\color{Green4}}{\normalcolor\vspace{1em}}
+
+% global settings
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.5em}
+\setminted{bgcolor=darkgray, style=monokai, fontsize=\footnotesize}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\pagebreak
+\section{Testing Data Structures}
+
+\question{In the following sections we will outline a few ways to test data
+structures. What do the tests tell us about our data structure, if they all
+pass?}
+
+\begin{answerblock}
+They tell us that our data structure has all the properties we expect--with
+confidence. If we couldn't be sure of our data structure, bugs would emerge
+downstream all the time when using our data structures.
+\end{answerblock}
+
+\question{What might happen if we forgo testing our data structures? What
+benefits does testing give to us programmers \emph{while} we are building the
+data structure?}
+
+\begin{answerblock}
+If we don't test our data structures, we obviously lose our confidence of data
+integrity, and cannot rely on the benefits of our unique data structure, based
+on its now-invalid properties. On top of that, as developers of the structure,
+we miss catching bugs early that might create compounding bugs that depend on
+structural invariants being true. IE if you don't test properties early on,
+then random bugs will pop up later that seem mystifying, and become much harder
+to debug.
+\end{answerblock}
+
+\pagebreak
+\section{Blackbox}
+
+\question{Describe blackbox testing. What does it test, what is known while
+testing?}
+
+\begin{answerblock}
+Blackbox testing is one of our two methods we use to test our data structures.
+It is called blackbox, because we pretend (or enforce) our view of our data
+structure to be black--or, opaque. We can test our structure's function return
+values in order to assess whether or not the structure has been operating
+correctly.
+
+We only know the things a user would know about the function, public members
+and such.
+\end{answerblock}
+
+\question{If you wanted to blackbox test a balanced binary tree, what are some
+tests you could implement?}
+
+\begin{answerblock}
+You could test:
+
+\begin{itemize}
+    \item Whether or not all inserted items made it in.
+    \item Whether or not deleting reduces the number of elements correctly.
+\end{itemize}
+
+Or any other tests that validate data integrity.
+\end{answerblock}
+
+\pagebreak
+\section{Glassbox}
+
+\question{Describe glassbox testing. What does it test, what is known while
+testing?}
+
+\begin{answerblock}
+Glassbox testing is a type of testing that assumes we can look into our
+structure (like it's made of glass). This means that we can verify the
+structure itself, instead of just data integrity like with blackbox testing.
+
+With glassbox testing, we know everything about the structure.
+\end{answerblock}
+
+\question{If you wanted to glassbox test a balanced binary tree, what are some
+tests you could implement?}
+
+\begin{answerblock}
+You could test:
+
+\begin{itemize}
+    \item Whether or not the tree is balanced (left height \(\approx\) right height).
+    \item Whether or not all elements are less or greater than parents
+    depending on their direction.
+    \item If we have parent pointers, that all parent and children pointers are
+    bidirectional.
+\end{itemize}
+
+Basically, every invariant/property of our class can have one or more tests to
+assure that property with glassbox testing.
+\end{answerblock}
+
+\pagebreak
+\section{Unit Testing}
+
+\question{What is the point of unit testing? Describe an environment where you
+would see this, and the purpose it fulfills.}
+
+\begin{answerblock}
+Unit testing is great if you are writing a large project, or if you have a
+large project environment with multiple contributors, and you want to ensure
+that function domain and ranges are verified. It makes sure that new code is
+written on top of predictable input/output to try and reduce bugs and
+tech-debt.
+\end{answerblock}
+
+\question{Write a basic unit test, and show it's execution. Do this
+however you like, C++, Python, pseudocode, just be specific.}
+
+\begin{minted}{python}
+def auth_user(user: User, project: Project) -> bool:
+    return user in project.editors and user.status is User.Status.ACTIVE
+
+def auth_user_test_1() -> bool:
+    user = User(status=User.Status.FROZEN)
+    project = Project(editors=[user])
+    return auth_user(user, project) == False
+
+def auth_user_test_2() -> bool:
+    user = User(status=User.Status.ACTIVE)
+    project = Project(editors=[user])
+    return auth_user(user, project) == True
+
+# ...etc
+# ...
+
+test_results = []
+for test_func in tests: # pretend `tests` is all auth tests 
+    curr = test_func()
+    test_results.append(curr)
+    if curr == False:
+        print(f'*** {test_func.__name__} fails')
+
+if all(test_results):
+    print('*** all tests passed')
+\end{minted}
+
+\begin{minipage}{\textwidth}
+\question{BONUS: do you know the other big two types of software testing?}
+
+\begin{answerblock}
+In addition to unit testing, there's \textbf{integration testing}, and
+\textbf{end-to-end}/\textbf{system testing}. Integration testing seeks to test
+how components interact with one another, rather then testing individual
+components. End-to-end is the next and furthest level out. It tests all
+components together, alongside user stories, UX, and other product-wide
+metrics.
+\end{answerblock}
+\end{minipage}
+
+\end{document}

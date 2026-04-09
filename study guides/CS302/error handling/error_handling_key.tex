@@ -1,0 +1,254 @@
+\documentclass[12pt, letterpaper]{article}
+
+\title{CS302: Error Handling \color{red}\textbf{[KEY]}\normalcolor}
+\author{Amiel L. Iliesi}
+\date{2026-03-30}
+
+% packages
+\usepackage[hidelinks]{hyperref}
+\usepackage[x11names]{xcolor}
+\usepackage{minted}
+
+% new commands
+\newcommand{\question}[1]{\textbf{#1}\par}
+\newcommand{\answer}[1]{\color{Green4}\textbf{#1}\normalcolor}
+
+% new environments
+\newenvironment{answerblock}{\color{Green4}}{\normalcolor\vspace{1em}}
+
+% global settings
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.5em}
+\usemintedstyle{monokai}
+\setminted{bgcolor=darkgray}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\pagebreak
+\section{C Style: Error Codes}
+
+\question{How do C-style programs and functions typically indicate errors?}
+
+\begin{answerblock}
+Via return type, typically through error codes or special return values.
+\end{answerblock}
+
+\question{What are some pros and cons to this approach? Why and how does modern
+error handling differ?}
+
+\begin{answerblock}
+Some pros are that it requires very little runtime overhead, since it's just
+using the function return infrastructure. It also results in predictable
+program flow, as there isn't remote error prompted stack unwinding.
+Finally--and arguably a con--you aren't forced to resolve the error, if it is
+trivial or non-fatal.
+
+Some cons are that there is no standard for this return method, so you rely on
+both: that the programmer that returned the code--returned the code correctly,
+and that the documented codes are returned in every case. Blind trust is a poor
+error handling paradigm. Also what was listed as a potential pro, that as a
+recipient of the code--your handling of the error is not enforced--also produces
+poor adherence to error handling. This will lead to untested, unhandled errors
+that are silently ignored.
+\end{answerblock}
+
+\pagebreak
+\section{C++}
+
+\subsection{\texttt{stdexcept} and \texttt{throw}}
+
+\begin{answerblock}
+\texttt{stdexcept} is the C++ library that has a few standardized error classes
+for us to use for our return types. Throw is what we call within a function to
+start the error return process. It tells the function to stop and unwind the
+stack from that given line, and carry that error value with it.
+\end{answerblock}
+
+\question{What is \texttt{stdexcept}? Give a few examples.}
+\begin{answerblock}
+\texttt{stdexcept} comes with some standardized error classes that we can
+inherit from, or use directly. Because they are standardized, their intent is
+well understood. For example, an error class that \texttt{stdexcept} has is
+\texttt{std::logic\_error} which indicates that a runtime logic error has
+occurred. Another class is \texttt{std::out\_of\_range}, which indicates that
+there was an attempted access out of a given range.
+\end{answerblock}
+
+\question{What does the \texttt{throw} keyword do? How is this different from
+\texttt{return}?}
+
+\begin{answerblock}
+\texttt{return} pops from the stack \emph{once}, and returns a definite,
+singular type. \texttt{throw}--on the other hand--keeps popping until it reaches
+a \texttt{try}/\texttt{catch} block, and enters the matching except block,
+\emph{or} until it exits the \texttt{main} call and aborts with an error status.
+
+In short, the \texttt{return} and \texttt{throw} follow separate paths, with
+slightly different behaviors.
+\end{answerblock}
+
+\begin{minipage}{\textwidth}
+\question{What if \texttt{stdexcept} doesn't have what we need? How would you
+write something more specific to your needs?}
+\begin{answerblock}
+There are three good options.
+
+\begin{enumerate}
+    \item Inherit a new class from one of the base classes defined in the
+    \texttt{stdexcept} library.
+    \item Inherit a new class from the base exception class defined in the
+    \texttt{exception} library.
+    \item If both of the above don't suit your needs, create a custom
+    \texttt{class} or \texttt{struct} to throw.
+\end{enumerate}
+\end{answerblock}
+\end{minipage}
+
+\subsection{\texttt{try}/\texttt{catch}}
+
+\question{What are \texttt{try} and \texttt{catch}?}
+
+\begin{answerblock}
+If you can expect a piece of code to fail and throw an error, it should be
+wrapped in a \texttt{try}/\texttt{catch} block. The \texttt{try}/\texttt{catch}
+ensures predictable flow in the event of an error, IE "I have seen that the
+error occured, and now to keep running, do this instead".
+
+For example, if you are doing a division with floating point numbers, you
+should wrap the computing block or function in a \texttt{try}/\texttt{catch},
+to handle a divide-by-zero.
+\end{answerblock}
+
+\question{What are the \emph{three} parameter formats you can specify for
+\texttt{catch}?}
+
+\begin{answerblock}
+\begin{itemize}
+    \item catch based on type, anonymously:
+    \mintinline{c++}|catch(TYPE&) {}|
+    \item catch based on type:
+    \mintinline{c++}|catch(TYPE& err_obj_name) {}|
+    \item catch all:
+    \mintinline{c++}|catch(...) {}|
+\end{itemize}
+\end{answerblock}
+
+\subsection{Errors as Return Values, and \texttt{std::expected}}
+
+\textbf{NOTE: you may not need to know this for class, but it's good to know
+for modern error handling practices.}
+
+\question{What is an \emph{error as return value}? Describe the pros and cons
+to this approach. Also show a simple example of {\lq{throwing}\rq}  an error value with
+\texttt{std::expected}.}
+
+\begin{answerblock}
+For exceptions, throwing is much easier and more readable
+\emph{at point of error}. It makes the throw site more readable, but it comes
+with a host of negatives. Because it can throw \emph{any type}, the domain of
+values the reader has to deal with at the \texttt{catch} block are vague and
+frustrating. This leads to a messy, nested, obfuscated execute block at the
+\texttt{try}/\texttt{catch}, lovingly referred to as
+\texttt{try}/\texttt{catch} \emph{hell}. As a nice bonus, there's a runtime
+cost for using exceptions.
+
+Using errors as values on the other hand--\emph{if used correctly}--fixes a lot
+of these issues. It's why \textbf{safe} languages like Rust adopted this style
+for their exception handling. You form a compound type that can either be the
+value you expect (like an int) \emph{or}, it can be an unexpected error value.
+This means that the user is forced to deal with the error, \emph{and} that the
+error type is known to the caller beforehand as well. Finally, since it uses
+the \texttt{return} infrastructure, it is also fast.
+
+In short, the convenience and flexibility of exceptions mean that they,
+ironically, become hard to structure and decipher from the receiver's
+perspective. Having rigid errors as values makes things predictable and
+readable.
+
+And here's an error as value example with \texttt{std::expected}:
+
+\begin{minipage}{\textwidth}
+\begin{minted}{cpp}
+enum class Error {
+    divide_by_zero,
+    NaN
+};
+
+auto f(float a, float b) -> std::expected<float, Error>
+{
+    if std::isnan(a) or std::isnan(b) {
+        return std::unexpected(Error::NaN);
+    }
+    else if (b == 0.0) {
+        return std::unexpected(Error::divide_by_zero);
+    }
+
+    return a/b;
+}
+
+int main() {
+    float a = 5.0;
+    float b = 3.0;
+
+    auto res = f(a, b);
+
+    if (res.has_value()) {
+        std::println("{}/{}={}", a, b, *res);
+    }
+    else if (res.error() == Error::divide_by_zero) {
+        std::println(stderr, "Cannot divide by zero");
+    }
+    else if (res.error() == Error::NaN) {
+        std::println(stderr, "Cannot do division with NaN");
+    }
+}
+\end{minted}
+\end{minipage}
+\end{answerblock}
+
+\pagebreak
+\section{Python}
+
+\subsection{Raise}
+
+\question{What are the differences between Python's \texttt{raise}, and C++'s
+\newline\texttt{throw}?}
+
+\begin{answerblock}
+Besides the differences in syntax from Python to C++, they are equivalent.
+\end{answerblock}
+
+\question{What types of exceptions can you throw in Python? How can you define
+more--if needed?}
+
+\begin{answerblock}
+Same as in C++, inherit from a base or derived exception type. EG:
+
+\begin{minted}{python}
+class customException(Exception):
+    pass
+
+raise customException
+\end{minted}
+\end{answerblock}
+
+\subsection{\texttt{try}/\texttt{except}/\texttt{else}/\texttt{finally}}
+
+\question{Explain these four keywords.}
+
+\begin{answerblock}
+\begin{itemize}
+    \item try: code to execute.
+    \item except: exception to handle, same as C++'s catch.
+    \item else: code to execute if \textbf{no} exceptions were raised.
+    \item finally: code to run afterwards, unconditionally. It runs before the
+    block is popped from the stack, IE before any returns or breaks that may
+    be present.
+\end{itemize}
+\end{answerblock}
+
+\end{document}
