@@ -49,7 +49,7 @@ g++ -Wall -g *.cpp
 
 * continue to next breakpoint: `c[ontinue]`
 
-* finish a function and display the return value: `'fin[ish]`
+* finish a function and display the return value: `fin[ish]`
 
 
 
