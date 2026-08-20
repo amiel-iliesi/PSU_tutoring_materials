@@ -7,6 +7,13 @@ from copy import deepcopy
 from reprlib import recursive_repr
 
 
+# TODO:
+# * implement the following standard list functions:
+#   - count, extend, index, pop, remove, sort, clear, reverse
+# * implement Generics for `List.Node.Value` for better type hinting support
+#   over the container
+#   - have a default type of `Any` to emulate the behavior of `list`
+
 class List:
     '''A list class that holds any amount and order of types in a
     non-contiguous container.'''
@@ -154,33 +161,33 @@ class List:
         if other is self:
             return True
 
-        if isinstance(other, List):
-            it_self = iter(self)
-            it_other = iter(other)
-
-            while True:
-                self_read = False
-                try:
-                    value_self = next(it_self)
-                    self_read = True
-                    value_other = next(it_other)
-
-                    # short-circuit
-                    if value_self != value_other:
-                        return False
-                except StopIteration:
-                    if self_read:
-                        return False  # self is longer
-                    else:
-                        try:
-                            next(it_other)
-                            return False  # other is longer
-                        except StopIteration:
-                            return True
-
-        else:
+        if not isinstance(other, List):
             raise TypeError(f'cannot compare {self.__class__.__name__} '
                             f'and {type(other).__name__}')
+
+        it_self = iter(self)
+        it_other = iter(other)
+
+        while True:
+            self_read = False
+            try:
+                value_self = next(it_self)
+                self_read = True
+
+                value_other = next(it_other)
+
+                # short-circuit
+                if value_self != value_other:
+                    return False
+            except StopIteration:
+                if self_read:
+                    return False  # self is longer
+                else:
+                    try:
+                        next(it_other)
+                        return False  # other is longer
+                    except StopIteration:
+                        return True
 
     def __str__(self) -> str:
         return repr(self)
