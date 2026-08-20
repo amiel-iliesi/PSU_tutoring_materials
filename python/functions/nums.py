@@ -1,10 +1,10 @@
 def square(x: int) -> int:
     '''Calculates the square of a given number.
 
-    # Parameters
+    ### Parameters
     * `x`: the number to be squared
 
-    # Returns
+    ### Returns
     The square of `x`
     '''
     return x * x
