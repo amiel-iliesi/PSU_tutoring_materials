@@ -187,7 +187,7 @@ class List:
 
     @recursive_repr()
     def __repr__(self) -> str:
-        return f'List({','.join(repr(x) for x in self)})'
+        return f'List({', '.join(repr(x) for x in self)})'
 
     def _remove_node(self, to_remove: List.Node) -> None:
         '''Removes the given node from the list.'''
