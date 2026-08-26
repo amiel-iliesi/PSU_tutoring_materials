@@ -31,6 +31,30 @@ class Node(Generic[T]):
             '@' + str(hex(id(self))) +\
             ':' + str(self.value)
 
+    def _pop_ios(self) -> Optional[T]:
+        '''Pops the in-order successor of this node.
+
+        ### returns
+        * `None`: if there is no in-order successor.
+        * `T` otherwise.'''
+
+        ios: Optional[Node[T]] = self.right
+
+        if ios is None:
+            return None
+
+        prev = self
+        while ios.left is not None:
+            prev = ios
+            ios = ios.left
+
+        if ios is prev.left:
+            prev.left = ios.right
+        else:
+            prev.right = ios.right
+
+        return ios.value
+
 
 class Tree(Generic[T]):
     '''Tree storage of generic types. Does not support duplicate key
@@ -41,47 +65,73 @@ class Tree(Generic[T]):
 
         self.root: Optional[Node[T]] = None
 
-    def __normalize_index(self, index: int) -> int:
+    def _normalize_index(self, index: int) -> int:
+        '''converts index range: `[-len, len)` -> `[0, len)`
+
+        ### raises
+        `IndexError`: Index lies outside of range.'''
+        size = self.size()
+
+        if not (-size <= index < size):
+            raise IndexError(f'{index} not in [-{size}, {size})')
+
         if index < 0:
-            original_index = index
-            size = self.size()
             index = size + index  # '+' because index is negative
-            if index < 0:
-                raise IndexError(f'reverse index {original_index} maps ' +
-                                 f'to index of {index}, which is outside '
-                                 f'of range for a tree of size {size}.')
 
         return index
 
-    def __get_at_index(self, index: int, curr: Node[T])\
-            -> tuple[Optional[Node[T]], int]:
-        node = None
+    def _get_at_index(self, index: int) -> Optional[Node[T]]:
+        '''Returns the node at the given index.
 
-        if curr.left is not None:
-            node, index = self.__get_at_index(index, curr.left)
-            if node is not None:
-                return (node, index)
+        ### arguments
+        `index`: normalized index value
 
-        if index == 0:
-            return (curr, index)
-        index -= 1
+        ### returns
+        `node`: node found at index **or** `None` if index is outside of the
+        tree's range.'''
+        def _get_at_index_rec(curr: Optional[Node[T]], index: int)\
+                -> tuple[Optional[Node[T]], int]:
+            '''Recursive helper for indexed in-order search.
 
-        if curr.right is not None:
-            return self.__get_at_index(index, curr.right)
+            ### arguments
+            * `index`: index value to search for
+            * `curr`: recursive entry point
 
-        return (None, index)
+            ### returns
+            `(node, index)`
+            * `node`: the node found at the index **or** `None` if the node at
+            the index could not be found.
+            * `index`: the *remaining* indices to search.'''
+
+            if curr is None:
+                return (None, index)
+
+            node = None
+
+            if curr.left is not None:
+                node, index = _get_at_index_rec(curr.left, index)
+                if node is not None:
+                    return (node, index)
+
+            if index == 0:
+                return (curr, index)
+            index -= 1
+
+            if curr.right is not None:
+                return _get_at_index_rec(curr.right, index)
+
+            return (None, index)
+
+        node, _ = _get_at_index_rec(self.root, index)
+        return node
 
     def __setitem__(self, index: int, value: T) -> None:
         if self.root is None:
             raise IndexError('An empty tree is not indexable')
 
-        index = self.__normalize_index(index)
+        n_index = self._normalize_index(index)
 
-        node = None
-        try:
-            node, _ = self.__get_at_index(index, self.root)
-        except IndexError:
-            pass  # handled below
+        node = self._get_at_index(n_index)
 
         if node is None:  # handled here so wrapper can give info
             size = self.size()
@@ -96,14 +146,11 @@ class Tree(Generic[T]):
         if self.root is None:
             raise IndexError('An empty tree is not indexable')
 
-        index = self.__normalize_index(index)
+        n_index = self._normalize_index(index)
 
         value = None
-        try:
-            node, _ = self.__get_at_index(index, self.root)
-            value = node.value if node is not None else None
-        except IndexError:
-            pass  # handled below
+        node = self._get_at_index(n_index)
+        value = node.value if node is not None else None
 
         if value is None:  # handled here so wrapper can give info
             size = self.size()
@@ -160,33 +207,6 @@ class Tree(Generic[T]):
         * Success status of removal; can fail if `value` is not present in
         tree.'''
 
-        def _pop_ios(curr: Node[T]) -> Optional[T]:
-            '''Pops the in-order successor of the given node from the tree.
-
-            ### arguments
-            `curr`: node to start from.
-
-            ### returns
-            * `None`: if there is no in-order successor.
-            * `T` otherwise.'''
-
-            ios: Optional[Node[T]] = curr.right
-
-            if ios is None:
-                return None
-
-            prev = curr
-            while ios.left is not None:
-                prev = ios
-                ios = ios.left
-
-            if ios is prev.left:
-                prev.left = ios.right
-            else:
-                prev.right = ios.right
-
-            return ios.value
-
         def _remove(value: T, curr: Optional[Node[T]]) \
                 -> tuple[bool, Optional[Node[T]]]:
             '''Recursive helper for remove.
@@ -213,7 +233,7 @@ class Tree(Generic[T]):
                 if curr.left is None and curr.right is None:
                     return (True, None)
                 elif curr.left is not None and curr.right is not None:
-                    popped = _pop_ios(curr)
+                    popped = curr._pop_ios()
                     if popped is not None:
                         curr.value = popped
                     return (True, curr)
@@ -235,10 +255,7 @@ class Tree(Generic[T]):
         '''**returns**:
         * The size of the tree.'''
 
-        if self.root is None:
-            return 0
-        else:
-            return self._size(self.root)
+        return self._size(self.root)
 
     def contains(self, value: T) -> bool:
         '''**returns**:
