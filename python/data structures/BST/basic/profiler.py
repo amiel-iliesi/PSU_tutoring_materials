@@ -46,4 +46,5 @@ if __name__ == '__main__':
     to_list(tree)
 
     # shows that indexed/linear access in a BST is slow
+    # NOTE: maybe can be sped up with caching results/preserialize
     index_all(tree, tree.size())
