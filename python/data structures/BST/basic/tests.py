@@ -10,42 +10,6 @@ def header(msg: str) -> str:
     return f'{msg}:\n{'-'*(len(msg)+1)}'
 
 
-def bidirectionality(tree: Tree[int]) -> tuple[bool, list[Node[int]]]:
-    '''Tests tree to ensure that all bidirectional relationships are accurate.
-    All children should point to their parents correctly, and vice versa.
-
-    **arguments**:
-    * `tree`: tree to be tested.
-
-    **returns**
-    * A tuple of the status of the test, and a list of failed nodes
-    (if any).'''
-
-    def __bidirectionality(curr: Optional[Node[int]])\
-            -> tuple[bool, list[Node[int]]]:
-        '''Recursive implement of parent function.'''
-        status = True
-        cases: list[Node[int]] = []
-
-        if curr is None:
-            return (True, [])
-
-        if curr.left is not None and curr.left.parent is not curr\
-                or curr.right is not None and curr.right.parent is not curr:
-            status = False
-            cases.append(curr)
-
-        left_status, left_cases = __bidirectionality(curr.left)
-        right_status, right_cases = __bidirectionality(curr.right)
-
-        status &= left_status & right_status
-        cases = left_cases + cases + right_cases
-
-        return (status, cases)
-
-    return __bidirectionality(tree.root)
-
-
 def insertion(tree: Tree[int], expected: set[int])\
         -> tuple[bool, tuple[set[int], set[int]]]:
     '''Ensures that all inserted values are in the tree, and no extras.'''
@@ -89,7 +53,7 @@ def duplication(insertions=10000, min=0, max=5000) -> tuple[bool, int]:
     '''Generates a new tree and naively attempts to insert values, in order to
     attempt to create collisions. Uses sets to monitor expected behavior, and
     compares results at the end. Since the `insertion` test didn't test
-    duplication insertions, this tests the `Tree.insert` refusal mechaism in
+    duplication insertions, this tests the `Tree.insert` refusal mechanism in
     the `bst.Tree` itself.
 
     **returns**:
@@ -152,15 +116,6 @@ if __name__ == '__main__':
 
     for n in values:
         tree.insert(n)
-
-    success, cases = bidirectionality(tree)
-    print(f'[{'✓' if success else '✗'}] Bidirectionality Test')
-    for case in cases:
-        print(repr(case))
-        if case.left is not None and case.left.parent is not case:
-            print(repr(case.left))
-        if case.right is not None and case.right.parent is not case:
-            print(repr(case.right))
 
     success, differences = insertion(tree, set(values))
     print(f'[{'✓' if success else '✗'}] Insertion Test')

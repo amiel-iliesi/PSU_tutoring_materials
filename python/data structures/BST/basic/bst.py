@@ -14,20 +14,17 @@ class Node(Generic[T]):
     def __init__(self,
                  value: T,
                  left: Optional[Node[T]] = None,
-                 right: Optional[Node[T]] = None,
-                 parent: Optional[Node[T]] = None,
-                 ) -> None:
+                 right: Optional[Node[T]] = None) -> None:
         super().__init__()
 
         self.value = value
         self.left = left
         self.right = right
-        self.parent = parent
 
     def __repr__(self) -> str:
         return str(self.__class__) + '@' + str(hex(id(self))) +\
             f'(value={str(self.value)}, left={str(self.left)}, ' +\
-            f'right={str(self.right)}, parent={str(self.parent)})'
+            f'right={str(self.right)})'
 
     def __str__(self) -> str:
         return str(self.__class__) +\
@@ -43,58 +40,6 @@ class Tree(Generic[T]):
         super().__init__()
 
         self.root: Optional[Node[T]] = None
-
-    def __find(self, value: T, curr: Optional[Node[T]] = None) -> Node[T]:
-        '''Finds the node location of the given `value`. If multiple values are
-        present, return the deepest matching node in the tree--to aid with
-        insertion.
-
-        **arguments**:
-        * `value`: key to search for.
-        * `curr`: node to recurse search from. If no node is give, search is
-        run from root.
-
-        **returns**:
-        * deepest matched node **OR** parent node to *vacant* matched
-        location.'''
-
-        if curr is None:
-            if self.root is None:
-                raise LookupError('cannot return Node from an empty tree')
-            else:
-                curr = self.root
-
-        if value < curr.value:
-            if curr.left is None:
-                return curr
-            else:
-                return self.__find(value, curr.left)
-        elif value > curr.value:
-            if curr.right is None:
-                return curr
-            else:
-                return self.__find(value, curr.right)
-        else:
-            return curr
-
-    def __get_IOS(self, curr: Node[T]) -> Node[T]:
-        '''Returns the in-order successor to the current node.
-
-        **arguments**:
-        * `curr`: node to find the in-order successor of.
-
-        **returns**:
-        * The in-order successor node.'''
-
-        if curr.right is None:
-            raise ValueError(f'no successor exists for {curr}')
-
-        ios = curr.right
-
-        while ios.left is not None:
-            ios = ios.left
-
-        return ios
 
     def __normalize_index(self, index: int) -> int:
         if index < 0:
@@ -178,20 +123,32 @@ class Tree(Generic[T]):
         * Success status of insertion. Can fail if `value` is already present
         in tree.'''
 
-        if self.root is None:
-            self.root = Node(value)
-            return True
+        def _insert(value: T, curr: Optional[Node]) -> tuple[bool, Node[T]]:
+            '''Recursive helper for insert.
 
-        found_node = self.__find(value)
+            ### arguments
+            * `value`: new value to insert into the tree
+            * `curr`: node to recurse insertion from
 
-        if value > found_node.value:
-            found_node.right = Node(value, parent=found_node)
-        elif value < found_node.value:
-            found_node.left = Node(value, parent=found_node)
-        else:
-            return False
+            ### returns
+            `(status, node)`
+            * `status`: whether or not insertion was successful (no duplicate
+            found)
+            * `node`: returns the node at the given call'''
 
-        return True
+            if curr is None:
+                return (True, Node(value))
+            elif value < curr.value:
+                status, curr.left = _insert(value, curr.left)
+                return (status, curr)
+            elif value > curr.value:
+                status, curr.right = _insert(value, curr.right)
+                return (status, curr)
+            else:
+                return (False, curr)
+
+        status, self.root = _insert(value, self.root)
+        return status
 
     def remove(self, value: T) -> bool:
         '''Removes the deepest match of the value from the tree.
@@ -203,68 +160,76 @@ class Tree(Generic[T]):
         * Success status of removal; can fail if `value` is not present in
         tree.'''
 
-        if self.root is None:
-            return False  # empty tree will never have a value
+        def _pop_ios(curr: Node[T]) -> Optional[T]:
+            '''Pops the in-order successor of the given node from the tree.
 
-        found_node = self.__find(value)
+            ### arguments
+            `curr`: node to start from.
 
-        if found_node.value != value:
-            return False
+            ### returns
+            * `None`: if there is no in-order successor.
+            * `T` otherwise.'''
 
-        found_parent = found_node.parent
+            ios: Optional[Node[T]] = curr.right
 
-        is_left = found_node is found_parent.left \
-            if found_parent is not None else None
+            if ios is None:
+                return None
 
-        # has no children
-        if found_node.left is None and found_node.right is None:
-            if found_parent is not None:
-                if is_left:
-                    found_parent.left = None
-                else:
-                    found_parent.right = None
+            prev = curr
+            while ios.left is not None:
+                prev = ios
+                ios = ios.left
+
+            if ios is prev.left:
+                prev.left = ios.right
             else:
-                self.root = None
-        # has one child
-        elif (found_node.left is None) != (found_node.right is None):
-            new_parents_child = found_node.left
-            if found_node.right is not None:
-                new_parents_child = found_node.right
+                prev.right = ios.right
 
-            if found_parent is not None:
-                if is_left:
-                    found_parent.left = new_parents_child
+            return ios.value
+
+        def _remove(value: T, curr: Optional[Node[T]]) \
+                -> tuple[bool, Optional[Node[T]]]:
+            '''Recursive helper for remove.
+
+            ### arguments
+            * `value`: value to match against for removal.
+            * `curr`: node to recurse from.
+
+            ### returns
+            `(status, node)`
+            * `status`: status of removal
+            * `node`: (new) node at site of recursion.
+            '''
+
+            if curr is None:
+                return (False, None)
+            elif value < curr.value:
+                status, curr.left = _remove(value, curr.left)
+                return (status, curr)
+            elif value > curr.value:
+                status, curr.right = _remove(value, curr.right)
+                return (status, curr)
+            else:  # ==, remove value
+                if curr.left is None and curr.right is None:
+                    return (True, None)
+                elif curr.left is not None and curr.right is not None:
+                    popped = _pop_ios(curr)
+                    if popped is not None:
+                        curr.value = popped
+                    return (True, curr)
+                elif curr.left is not None:
+                    return (True, curr.left)
                 else:
-                    found_parent.right = new_parents_child
-            else:
-                self.root = new_parents_child
-        # both children
-        else:
-            ios = self.__get_IOS(found_node)
-            ios_is_left = ios is ios.parent.left\
-                if ios.parent is not None else None
+                    return (True, curr.right)
 
-            # swap values
-            ios.value, found_node.value = found_node.value, ios.value
+        status, self.root = _remove(value, self.root)
+        return status
 
-            # remove IOS
-            if ios.parent is not None:
-                if ios_is_left:
-                    ios.parent.left = ios.right
-                else:
-                    ios.parent.right = ios.right
-            else:
-                raise ValueError(
-                    'an in-order successor should always have a parent'
-                )
-
-        return True
-
-    def __size(self, curr: Optional[Node[T]]) -> int:
+    def _size(self, curr: Optional[Node[T]]) -> int:
         if curr is None:
             return 0
 
-        return 1 + self.__size(curr.left) + self.__size(curr.right)
+        return 1 + self._size(curr.left) + self._size(curr.right)
 
     def size(self) -> int:
         '''**returns**:
@@ -273,17 +238,23 @@ class Tree(Generic[T]):
         if self.root is None:
             return 0
         else:
-            return self.__size(self.root)
+            return self._size(self.root)
 
     def contains(self, value: T) -> bool:
         '''**returns**:
         * Whether or not the value is found in the tree.'''
-        if self.root is None:
-            return False
 
-        found_node = self.__find(value)
+        def _contains(value: T, curr: Optional[Node[T]]) -> bool:
+            if curr is None:
+                return False
+            elif value < curr.value:
+                return _contains(value, curr.left)
+            elif value > curr.value:
+                return _contains(value, curr.right)
+            else:
+                return True
 
-        return found_node.value == value
+        return _contains(value, self.root)
 
     def display(self) -> None:
         '''Displays the tree, in descending order, from top to bottom. The
