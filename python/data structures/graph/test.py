@@ -1,3 +1,5 @@
+'''Testing suite for `graph.py`'''
+
 from graph import Graph
 
 if __name__ == '__main__':

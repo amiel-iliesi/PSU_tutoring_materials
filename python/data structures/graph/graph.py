@@ -1,5 +1,7 @@
+'''Module containing various graphing classes and algorithm utilities.'''
+
 from __future__ import annotations
-from typing import TypeVar, Generic, Optional, Any, Callable
+from typing import TypeVar, Generic, Optional, Any
 from enum import Enum
 
 T = TypeVar('T')
@@ -19,7 +21,8 @@ class Edge:
 
 class Vertex(Generic[T]):
     '''Represents a point/node in the graph. Can connect to other vertices of
-    varying types via edges.'''
+    varying types via edges. Ensure that equality is properly supported for
+    your key type.'''
 
     def __init__(self) -> None:
         super().__init__()
@@ -56,38 +59,27 @@ class Graph:
         self.vertices: list[Vertex] = []
 
     def create_vertex(self,
-                      key: Any,
-                      comp: Optional[Callable[[Any, Any], bool]] = None
-                      ) -> bool:
+                      key: Any) -> bool:
         '''Creates a `Vertex` with the given `key`. Can fail if insertion would
         result in a duplicate `Vertex` entry in the graph. Vertices can be of
         any type--including varying types within the graph. Searches and
         propagation are done with **equality** as the test. Errors thrown by
         incompatibility for equality are ignored and treated as falsy--since
         being that they are of incompatible types, they are surely unequal in
-        value. A comparison function can be substituted if the basic equality
-        comparison is insufficient--raised errors are still ignored in this
-        case.
+        value.
 
         ### arguments
         * `key`: key value to create `Vertex` with.
-        * `comp`: optional comparison function for more nuanced comparison.
-        Left as `None`, equality will be used between key pairs.
 
         ### returns
         Success status of `Vertex` creation.'''
         raise NotImplementedError
 
-    def remove_vertex(self,
-                      key: Any,
-                      comp: Optional[Callable[[Any, Any], bool]] = None
-                      ) -> bool:
+    def remove_vertex(self, key: Any) -> bool:
         '''Removes all given vertices from the graph that match the `key`.
 
         ### arguments
         * `key`: value to match for.
-        * `comp` optional comparison function for more nuanced comparison.
-        Left as `None`, quality will be used between key pairs.
 
         ### returns
         Number of vertices removed.'''
