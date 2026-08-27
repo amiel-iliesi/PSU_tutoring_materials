@@ -29,13 +29,13 @@ class Vertex(Generic[T]):
 
         self.key: T
         self.edges: list[Edge] = []
-        # TODO: include other attributes, like label, or aux data?
 
     def __eq__(self, value: Any) -> bool:
-        try:
-            return self.key == value  # default behavior, compare on key
-        except Exception:
-            return False
+        raise NotImplementedError
+#        try:
+#            return self.key == value  # default behavior, compare on key
+#        except Exception:
+#            return False
 
 
 class Search(Enum):
@@ -133,5 +133,8 @@ class Graph:
         '''Clears all `Vertices` and consequently `Edges` from the graph.'''
         raise NotImplementedError
 
-    def path(self, method: Search = Search.DFS) -> Path:
+    def path(self,
+             source: Any,
+             destination: Any,
+             method: Search = Search.DFS) -> Path:
         raise NotImplementedError
