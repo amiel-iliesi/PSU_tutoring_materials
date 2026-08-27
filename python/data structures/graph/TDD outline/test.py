@@ -8,9 +8,14 @@ import signal
 from random import randint
 
 
-def test_cycles() -> None:
+def test_cycles(prerequisite_tests: Optional[list[bool]] = None) -> bool:
     '''Tests if each search algorithm is able to search despite the presence
     of cycles.'''
+    if prerequisite_tests is not None:
+        if not all(prerequisite_tests):
+            skip_summary(test_cycles.__name__, 'prerequisites unmet')
+            return False
+
     graph = Graph()
 
     # make sure that Graph has all neccessary
@@ -22,8 +27,9 @@ def test_cycles() -> None:
         all_paths(graph, 'A', 'B')
         graph.clear()
     except NotImplementedError:
-        skip_summary(test_cycles.__name__)
-        return  # skip test
+        skip_summary(test_cycles.__name__,
+                     'required graph features not implemented')
+        return False  # skip test
 
     # test statistics variables
     cases: int = 0
@@ -70,9 +76,16 @@ def test_cycles() -> None:
 
     summary(test_cycles.__name__, successes, cases, fail_messages)
 
+    return successes == cases
 
-def test_keyerror() -> None:
+
+def test_keyerror(prerequisite_tests: Optional[list[bool]] = None) -> bool:
     '''Tests all calls that should result in a `KeyError`.'''
+    if prerequisite_tests is not None:
+        if not all(prerequisite_tests):
+            skip_summary(test_keyerror.__name__, 'prerequisites unmet')
+            return False
+
     cases: int = 0
     successes: int = 0
     fail_messages: list[str] = []
@@ -85,8 +98,9 @@ def test_keyerror() -> None:
         graph.connect('A', 'B')
         graph.clear()
     except NotImplementedError:
-        skip_summary(test_keyerror.__name__)
-        return
+        skip_summary(test_keyerror.__name__,
+                     'required graph features not implemented')
+        return False
 
     # 1. DNE: A, B
     # 1.a. connect
@@ -152,8 +166,10 @@ def test_keyerror() -> None:
 
     summary(test_keyerror.__name__, successes, cases, fail_messages)
 
+    return successes == cases
 
-def test_vertex_basics() -> None:
+
+def test_vertex_basics() -> bool:
     '''Ensures vertex basic functions are valid.'''
     cases: int = 0
     successes: int = 0
@@ -166,8 +182,9 @@ def test_vertex_basics() -> None:
         graph.remove_vertex('A')
         graph.clear()
     except NotImplementedError:
-        skip_summary(test_vertex_basics.__name__)
-        return
+        skip_summary(test_vertex_basics.__name__,
+                     'required graph features not implemented')
+        return False
 
     created = ('A', 'B', 'C')
     not_created = ('D', 'E', 'F')
@@ -195,10 +212,18 @@ def test_vertex_basics() -> None:
 
     summary(test_vertex_basics.__name__, successes, cases, fail_messages)
 
+    return successes == cases
 
-def test_bidirectionality() -> None:
+
+def test_bidirectionality(prerequisite_tests: Optional[list[bool]] = None
+                          ) -> bool:
     '''Tests creation, removal, and updating of edges and their weights with
     bidirectionality.'''
+    if prerequisite_tests is not None:
+        if not all(prerequisite_tests):
+            skip_summary(test_bidirectionality.__name__, 'prerequisites unmet')
+            return False
+
     cases: int = 0
     successes: int = 0
     fail_messages: list[str] = []
@@ -212,8 +237,9 @@ def test_bidirectionality() -> None:
         graph.disconnect('A', 'B')
         graph.clear()
     except NotImplementedError:
-        skip_summary(test_bidirectionality.__name__)
-        return
+        skip_summary(test_bidirectionality.__name__,
+                     'required graph features not implemented')
+        return False
 
     graph.create_vertex('A')
     graph.create_vertex('B')
@@ -252,12 +278,19 @@ def test_bidirectionality() -> None:
 
     summary(test_bidirectionality.__name__, successes, cases, fail_messages)
 
+    return successes == cases
 
-def test_pathfinding() -> None:
+
+def test_pathfinding(prerequisite_tests: Optional[list[bool]] = None) -> bool:
     '''Generates large, random graphs, and runs many random trials and paths
     over those graphs. No specifics are guaranteed, but the existence of a path
     must be aggreed on by every search method. This test checks that no search
     method fails while others succeed--undefined behavior.'''
+    if prerequisite_tests is not None:
+        if not all(prerequisite_tests):
+            skip_summary(test_pathfinding.__name__, 'prerequisites unmet')
+            return False
+
     cases: int = 0
     successes: int = 0
     fail_messages: list[str] = []
@@ -271,8 +304,9 @@ def test_pathfinding() -> None:
         all_paths(graph, 'A', 'B')
         graph.clear()
     except NotImplementedError:
-        skip_summary(test_pathfinding.__name__)
-        return  # skip test
+        skip_summary(test_pathfinding.__name__,
+                     'required graph features not implemented')
+        return False  # skip test
 
     TRIALS = 5
     N_PATHS_CHECKED = 10
@@ -329,20 +363,31 @@ def test_pathfinding() -> None:
 
     summary(test_pathfinding.__name__, successes, cases, fail_messages)
 
+    return successes == cases
+
 
 if __name__ == '__main__':
     print(header('Running tests for graph.py:'))
 
-    test_cycles()
+    result_vertex_basics = test_vertex_basics()
 
     print()
-    test_keyerror()
+    result_keyerror = test_keyerror(prerequisite_tests=[result_vertex_basics])
 
     print()
-    test_vertex_basics()
+    result_bidirectionality = test_bidirectionality(
+        prerequisite_tests=[result_vertex_basics, result_keyerror]
+    )
 
     print()
-    test_bidirectionality()
+    result_cycles = test_cycles(
+        prerequisite_tests=[result_vertex_basics, result_keyerror]
+    )
 
     print()
-    test_pathfinding()
+    result_pathfinding = test_pathfinding(
+        prerequisite_tests=[result_vertex_basics,
+                            result_keyerror,
+                            result_bidirectionality,
+                            result_cycles]
+    )
