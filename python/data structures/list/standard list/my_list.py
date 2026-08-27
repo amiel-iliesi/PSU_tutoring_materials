@@ -122,30 +122,30 @@ class List:
 
     # implementing this allows for container concatenation
     def __add__(self, other: Any) -> List:
-        if isinstance(other, List):
-            # create two Lists and stitch the middles together
-
-            # 1. create lists
-            left = deepcopy(self)
-            right = deepcopy(other)
-
-            # 2. stitch them together
-
-            # 2.a. nothing on the left side to stitch
-            if left.tail is None:
-                return right
-            # 2.b. connect the ends together in the middle
-            else:
-                left.tail.next = right.head
-                if right.head is not None:
-                    right.head.previous = left.tail
-                # 2.c. move tail to furthest end (if there's more)
-                if right.tail is not None:
-                    left.tail = right.tail
-            return left
-        else:
+        if not isinstance(other, List):
             raise TypeError(f'cannot concatenate {type(self)} and '
                             f'{type(other)}')
+
+        # create two Lists and stitch the middles together
+
+        # 1. create lists
+        left = deepcopy(self)
+        right = deepcopy(other)
+
+        # 2. stitch them together
+
+        # 2.a. nothing on the left side to stitch
+        if left.tail is None:
+            return right
+        # 2.b. connect the ends together in the middle
+        else:
+            left.tail.next = right.head
+            if right.head is not None:
+                right.head.previous = left.tail
+            # 2.c. move tail to furthest end (if there's more)
+            if right.tail is not None:
+                left.tail = right.tail
+        return left
 
     def __len__(self) -> int:
         total_len = 0
