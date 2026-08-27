@@ -27,7 +27,7 @@ def summary(test_name: str,
 def skip_summary(test_name: str):
     '''If a test is skipped under certain conditions, print a summary
     indicating that.'''
-    print(f'[*] {test_name}<SKIPPED>')
+    print(f'[?] {test_name}<SKIPPED>')
 
 
 def all_paths(graph: Graph,
