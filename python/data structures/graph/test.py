@@ -7,6 +7,10 @@ from typing import Optional
 import signal
 from random import randint
 
+# TODO:
+# - test json functions
+# - create tests for individual pathing algorithms with example graphs
+
 
 def test_cycles(prerequisite_tests: Optional[list[bool]] = None) -> bool:
     '''Tests if each search algorithm is able to search despite the presence
