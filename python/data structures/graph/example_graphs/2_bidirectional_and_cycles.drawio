@@ -1,0 +1,99 @@
+<mxfile host="Electron">
+  <diagram name="Page-1" id="i-ScfhrxhEr7_3YwrrZw">
+    <mxGraphModel dx="534" dy="388" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="420" pageHeight="60" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="mEstLukoDg0LviZM2CLL-8" edge="1" parent="1" source="mEstLukoDg0LviZM2CLL-1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;curved=0;" target="mEstLukoDg0LviZM2CLL-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="mEstLukoDg0LviZM2CLL-25" connectable="0" parent="mEstLukoDg0LviZM2CLL-8" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=8;fontFamily=Hack Nerd Font;" value="3.0" vertex="1">
+          <mxGeometry relative="1" x="0.125" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mEstLukoDg0LviZM2CLL-1" parent="1" style="ellipse;whiteSpace=wrap;html=1;shapeInside=1;aspect=fixed;fontFamily=Hack Nerd Font;" value="a" vertex="1">
+          <mxGeometry height="20" width="20" x="30" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="mEstLukoDg0LviZM2CLL-2" edge="1" parent="1" source="mEstLukoDg0LviZM2CLL-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;innerLoopWaypoints=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;curved=1;fontSize=2;" target="mEstLukoDg0LviZM2CLL-1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="70" y="50" />
+              <mxPoint x="70" y="20" />
+              <mxPoint x="40" y="20" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mEstLukoDg0LviZM2CLL-22" connectable="0" parent="mEstLukoDg0LviZM2CLL-2" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=8;fontFamily=Hack Nerd Font;" value="1.0" vertex="1">
+          <mxGeometry relative="1" x="0.292" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mEstLukoDg0LviZM2CLL-11" edge="1" parent="1" source="mEstLukoDg0LviZM2CLL-3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;curved=0;" target="mEstLukoDg0LviZM2CLL-1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="260" y="50" />
+              <mxPoint x="260" y="10" />
+              <mxPoint x="10" y="10" />
+              <mxPoint x="10" y="50" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mEstLukoDg0LviZM2CLL-24" connectable="0" parent="mEstLukoDg0LviZM2CLL-11" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=8;fontFamily=Hack Nerd Font;" value="1.0" vertex="1">
+          <mxGeometry relative="1" x="0.044" y="-1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mEstLukoDg0LviZM2CLL-12" edge="1" parent="1" source="mEstLukoDg0LviZM2CLL-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="mEstLukoDg0LviZM2CLL-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="mEstLukoDg0LviZM2CLL-27" connectable="0" parent="mEstLukoDg0LviZM2CLL-12" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=8;fontFamily=Hack Nerd Font;" value="5.0" vertex="1">
+          <mxGeometry relative="1" x="0.1111" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mEstLukoDg0LviZM2CLL-14" edge="1" parent="1" source="mEstLukoDg0LviZM2CLL-3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=default;curved=0;" target="mEstLukoDg0LviZM2CLL-6">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="200" y="20" />
+              <mxPoint x="130" y="20" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mEstLukoDg0LviZM2CLL-23" connectable="0" parent="mEstLukoDg0LviZM2CLL-14" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=8;fontFamily=Hack Nerd Font;" value="1.0" vertex="1">
+          <mxGeometry relative="1" x="0.1767" y="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mEstLukoDg0LviZM2CLL-3" parent="1" style="ellipse;whiteSpace=wrap;html=1;shapeInside=1;aspect=fixed;fontFamily=Hack Nerd Font;" value="c" vertex="1">
+          <mxGeometry height="20" width="20" x="220" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="mEstLukoDg0LviZM2CLL-13" edge="1" parent="1" source="mEstLukoDg0LviZM2CLL-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;startArrow=classic;startFill=1;" target="mEstLukoDg0LviZM2CLL-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="mEstLukoDg0LviZM2CLL-28" connectable="0" parent="mEstLukoDg0LviZM2CLL-13" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=8;fontFamily=Hack Nerd Font;" value="6.0" vertex="1">
+          <mxGeometry relative="1" x="-0.0844" y="-1" as="geometry">
+            <mxPoint x="3" y="-1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mEstLukoDg0LviZM2CLL-4" parent="1" style="ellipse;whiteSpace=wrap;html=1;shapeInside=1;aspect=fixed;fontFamily=Hack Nerd Font;" value="d" vertex="1">
+          <mxGeometry height="20" width="20" x="310" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="mEstLukoDg0LviZM2CLL-5" parent="1" style="ellipse;whiteSpace=wrap;html=1;shapeInside=1;aspect=fixed;fontFamily=Hack Nerd Font;" value="e" vertex="1">
+          <mxGeometry height="20" width="20" x="400" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="mEstLukoDg0LviZM2CLL-9" edge="1" parent="1" source="mEstLukoDg0LviZM2CLL-6" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;curved=0;" target="mEstLukoDg0LviZM2CLL-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="mEstLukoDg0LviZM2CLL-26" connectable="0" parent="mEstLukoDg0LviZM2CLL-9" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=8;fontFamily=Hack Nerd Font;" value="4.0" vertex="1">
+          <mxGeometry relative="1" x="-0.16" y="-1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mEstLukoDg0LviZM2CLL-6" parent="1" style="ellipse;whiteSpace=wrap;html=1;shapeInside=1;aspect=fixed;fontFamily=Hack Nerd Font;" value="b" vertex="1">
+          <mxGeometry height="20" width="20" x="130" y="40" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -77,6 +77,10 @@ def generate_graph(num_vertices: int,
                    max_connections: int,
                    wander: float
                    ) -> Graph:
+    '''Generates a random 2D Cartesian graph. The points are weighted by their
+    Euclidean distance. The generation of points is serial, and are connected
+    to adjacent points, serially--so connected points are more likely to be
+    physically closer to one another.'''
     graph = Graph()
 
     # generate connections all at once for efficiency

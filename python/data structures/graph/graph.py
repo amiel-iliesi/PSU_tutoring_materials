@@ -1,7 +1,7 @@
 '''Module containing various graphing classes and algorithm utilities.'''
 
 from __future__ import annotations
-from typing import TypeVar, Generic, Optional, Any
+from typing import TypeVar, Generic, Optional, Any, Callable
 from enum import Enum
 import json
 
@@ -19,6 +19,13 @@ class Edge:
         self.destination = destination
         self.weight = weight
 
+    def __str__(self) -> str:
+        s = f'{str(self.destination.key)}'
+
+        s += f'({str(self.weight)})' if self.weight is not None else ''
+
+        return s
+
     def to_json(self) -> str:
         return f'{{"destination": {id(self.destination)}, ' +\
             f'"weight": {self.weight if self.weight is not None else 'null'}}}'
@@ -34,6 +41,14 @@ class Vertex(Generic[T]):
 
         self.key: T = key
         self.edges: list[Edge] = []
+
+    def __str__(self) -> str:
+        s = f'{str(self.key)}'
+
+        for edge in self.edges:
+            s += f'\n\t* {str(edge)}'
+
+        return s
 
     def __repr__(self) -> str:
         return f'Vertex(key={repr(self.key)}, ' +\
@@ -78,6 +93,9 @@ class Search(Enum):
 
 
 Path = list[tuple[Vertex[Any], Edge]]
+'''A series of links from the source vertex, to the destination vertex. The
+list elements are `(Vertex(from), Edge(to))`. An empty list signifies that no
+viable path was found.'''
 
 
 class Graph:
@@ -88,6 +106,14 @@ class Graph:
         super().__init__()
 
         self.vertices: dict[Any, Vertex[Any]] = {}
+
+    def __str__(self) -> str:
+        s = f'<{self.__class__.__name__} object at {hex(id(self))}>'
+
+        for vertex in self.vertices.values():
+            s += f'\n* {str(vertex)}'
+
+        return s
 
     @staticmethod
     def reaches(destination: Any, path: Path) -> bool:
@@ -255,5 +281,99 @@ class Graph:
     def path(self,
              source: Any,
              destination: Any,
-             method: Search = Search.DFS) -> Path:
-        raise NotImplementedError
+             method: Search = Search.DFS,
+             heuristic: Optional[Callable[[Any], float]] = None
+             ) -> Path:
+        '''Finds a path (if it exists) between the source and destination,
+        using the supplied method.
+
+        ### arguments
+        * `source`: the vertex to start the search from.
+        * `destination`: the vertex to find a path to, from `source`.
+        * `method`: an enum value determining the pathing algorithm to use.
+        * `heuristic`: a user-defined heuristic function for use in
+        `method=Search.A_STAR`.
+
+        ### returns
+        A `Path` that the search found. An empty path indicates there doesn't
+        exist a path between the two points.
+
+        ### raises
+        `KeyError`: if either the `source` or `destination` don't exist in the
+        `Graph.`'''
+        source_vertex = self.vertices[source]
+        destination_vertex = self.vertices[destination]
+
+        if method is Search.DFS:
+            return self._path_dfs(source_vertex, destination_vertex)
+        if method is Search.A_STAR:
+            if heuristic is None:
+                raise ValueError('Path search run with A* needs a heuristic '
+                                 'function.')
+            raise NotImplementedError
+        else:
+            raise NotImplementedError
+
+    @staticmethod
+    def pretty_path(path: Path) -> str:
+        '''A method for generating human-readable paths from a `Path`
+        object.'''
+
+        if len(path) == 0:
+            return 'Path DNE'
+        else:
+            cum_weight: float | None = None
+
+            s = ''
+
+            for source, to in path:
+                s += f'{str(source.key)}'
+                if to.weight is not None:
+                    s += f' -({to.weight})-> '
+
+                    if cum_weight is None:
+                        cum_weight = 0.0
+
+                    cum_weight += to.weight
+                else:
+                    s += ' -> '
+
+            start = str(path[0][0].key)
+            end = str(path[-1][1].destination.key)
+
+            s += end
+
+            prefix = start
+            prefix += f'-({cum_weight})->'\
+                if cum_weight is not None else\
+                '->'
+            prefix += end
+
+            return f'Path({prefix}): {s}'
+
+    def _path_dfs(self,
+                  source: Vertex[Any],
+                  destination: Vertex[Any]
+                  ) -> Path:
+        '''Implementation of the DFS search algorithm.'''
+        searched: set[int] = set()
+
+        def _search(current: Vertex[Any], destination: Vertex[Any]) -> Path:
+            '''Recursive implementation of the DFS search algorithm.'''
+
+            if id(current) in searched:
+                return []
+            else:
+                searched.add(id(current))
+
+            for edge in current.edges:
+                if edge.destination == destination:
+                    return [(current, edge)]
+                else:
+                    path_from_curr = _search(edge.destination, destination)
+                    if len(path_from_curr) > 0:
+                        return [(current, edge)] + path_from_curr
+
+            return []  # no path found from current vertex
+
+        return _search(source, destination)
