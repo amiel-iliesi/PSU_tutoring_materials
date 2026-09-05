@@ -4,6 +4,7 @@ from __future__ import annotations
 from typing import TypeVar, Generic, Optional, Any, Callable
 from enum import Enum
 import json
+from queue import Queue
 
 T = TypeVar('T')
 
@@ -66,6 +67,9 @@ class Vertex(Generic[T]):
                 return self.key == value
         except Exception:
             return False
+
+    def __hash__(self) -> int:
+        return hash(self.key)
 
     def connected(self, destination: Any) -> bool:
         '''Returns whether or not the vertex is connected to the
@@ -309,6 +313,8 @@ class Graph:
 
         if method is Search.DFS:
             return self._path_dfs(source_vertex, destination_vertex)
+        if method is Search.BFS:
+            return self._path_bfs(source_vertex, destination_vertex)
         if method is Search.A_STAR:
             if heuristic is None:
                 raise ValueError('Path search run with A* needs a heuristic '
@@ -362,7 +368,7 @@ class Graph:
         searched: set[int] = set()
 
         def _search(current: Vertex[Any], destination: Vertex[Any]) -> Path:
-            '''Recursive implementation of the DFS search algorithm.'''
+            '''Recursive implementation of the DFS algorithm.'''
 
             if id(current) in searched:
                 return []
@@ -380,3 +386,48 @@ class Graph:
             return []  # no path found from current vertex
 
         return _search(source, destination)
+
+    def _path_bfs(self,
+                  source: Vertex[Any],
+                  destination: Vertex[Any]
+                  ) -> Path:
+        '''Implementation of the BFS algorithm.'''
+        found = False
+        searched: set[int] = set()
+        queue: Queue[Vertex] = Queue()
+        # A -(e)-> B: edge_trace[B] = (A, e)
+        edge_trace: dict[Vertex, Optional[tuple[Vertex, Edge]]] = {}
+
+        queue.put(source)
+        edge_trace[source] = None
+
+        while queue.not_empty:
+            current_vertex = queue.get()
+            searched.add(id(current_vertex))
+
+            if current_vertex == destination:
+                found = True
+                break
+
+            for edge in current_vertex.edges:
+                if edge.destination not in searched:
+                    queue.put(edge.destination)
+                    edge_trace[edge.destination] = (current_vertex, edge)
+
+        if not found:
+            return []
+
+        path: Path = []
+
+        curr_vertex_trace: Optional[Vertex[Any]] = destination
+
+        while curr_vertex_trace is not None:
+            from_info = edge_trace[curr_vertex_trace]
+
+            if from_info is not None:
+                path.insert(0, from_info)
+                curr_vertex_trace, _ = from_info
+            else:
+                curr_vertex_trace = None
+
+        return path

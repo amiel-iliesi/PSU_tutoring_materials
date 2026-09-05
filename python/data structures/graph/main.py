@@ -1,6 +1,6 @@
 '''Example usage of the graph in a practical setting.'''
 
-from graph import Graph
+from graph import Graph, Search
 from graph_types import Point
 import pickle
 
@@ -10,4 +10,6 @@ if __name__ == '__main__':
     with open('example_graphs/3_weighted_lattice.pickle', mode='rb') as f:
         graph = pickle.load(f)
 
-    print(Graph.pretty_path(graph.path(Point(0, 0), Point(5, 5))))
+    path = graph.path(Point(0, 0), Point(5, 5), method=Search.BFS)
+
+    print(Graph.pretty_path(path))
