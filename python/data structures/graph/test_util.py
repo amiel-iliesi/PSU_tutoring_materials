@@ -1,9 +1,9 @@
 from __future__ import annotations
-from typing import Any
+from typing import Any, Optional, Callable
 from graph import Graph, Path, Search
-from math import sqrt
 import numpy as np
 from random import uniform
+from graph_types import Point
 
 
 def summary(test_name: str,
@@ -32,44 +32,26 @@ def skip_summary(test_name: str, reason: str):
 
 def all_paths(graph: Graph,
               source: Any,
-              destination: Any
+              destination: Any,
+              heuristic: Optional[Callable[[Any], float]] = None
               ) -> dict[Search, Path]:
     '''Runs path search on all search algorithms and returns a dictionary of
-    the results.'''
-    return {search: graph.path(source, destination, method=search)
-            for search in Search}
+    the results. This skips the A* search if no heuristic function is provided,
+    IE A* is non-applicable.'''
+
+    methods: list[Search] = []
+
+    if heuristic is not None:
+        methods = [search for search in Search]
+    else:
+        methods = [search for search in Search if search is not Search.A_STAR]
+
+    return {method: graph.path(source, destination, method=method)
+            for method in methods}
 
 
 def header(s: str) -> str:
     return f'{s}\n{'-'*len(s)}'
-
-
-class Point:
-    def __init__(self, x: float, y: float) -> None:
-        self.x = x
-        self.y = y
-
-    def __eq__(self, value: object) -> bool:
-        if isinstance(value, Point):
-            return self.x == value.x and self.y == value.y
-        else:
-            raise TypeError(f'Point == {type(value)}: undefined')
-
-    def __str__(self) -> str:
-        return f'({self.x}, {self.y})'
-
-    def __repr__(self) -> str:
-        return f'Point(x={self.x}, y={self.y})'
-
-    @staticmethod
-    def distance(a: Point, b: Point) -> float:
-        '''Returns the Euclidean distance between the two points.'''
-        return sqrt((a.x-b.x)**2 + (a.y-b.y)**2)
-
-    @staticmethod
-    def distance_manhattan(a: Point, b: Point) -> float:
-        '''Faster but less accurate than Euclidean distance.'''
-        return abs(a.x-b.x) + abs(a.y-b.y)
 
 
 def generate_graph(num_vertices: int,

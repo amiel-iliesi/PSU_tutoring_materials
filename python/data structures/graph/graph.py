@@ -7,6 +7,9 @@ import json
 
 T = TypeVar('T')
 
+# TODO:
+# - Implement the remaining search algorithms.
+
 
 class Edge:
     '''Represents the edge that connects two vertices. Source vertex is left
@@ -288,8 +291,8 @@ class Graph:
         using the supplied method.
 
         ### arguments
-        * `source`: the vertex to start the search from.
-        * `destination`: the vertex to find a path to, from `source`.
+        * `source`: the key to start the search from.
+        * `destination`: the key to find a path to, from `source`.
         * `method`: an enum value determining the pathing algorithm to use.
         * `heuristic`: a user-defined heuristic function for use in
         `method=Search.A_STAR`.
