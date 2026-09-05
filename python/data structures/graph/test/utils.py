@@ -6,30 +6,6 @@ from random import uniform
 from graph_types import Point
 
 
-def summary(test_name: str,
-            successes: int,
-            cases: int,
-            fail_messages: list[str]
-            ) -> None:
-    '''Prints a summary of the test run in a standardized format.'''
-    total_success = successes == cases
-    test_header = f'[{'✓' if total_success else '✗'}] ' +\
-        f'{test_name}: {successes}/{cases}'
-    print(test_header)
-
-    if len(fail_messages) > 0:
-        print('-'*len(test_header))
-
-    for fail_message in fail_messages:
-        print(f'\t***{fail_message}')
-
-
-def skip_summary(test_name: str, reason: str):
-    '''If a test is skipped under certain conditions, print a summary
-    indicating that.'''
-    print(f'[?] {test_name}<SKIPPED>: {reason}')
-
-
 def all_paths(graph: Graph,
               source: Any,
               destination: Any,
@@ -48,10 +24,6 @@ def all_paths(graph: Graph,
 
     return {method: graph.path(source, destination, method=method)
             for method in methods}
-
-
-def header(s: str) -> str:
-    return f'{s}\n{'-'*len(s)}'
 
 
 def generate_graph(num_vertices: int,
@@ -77,16 +49,28 @@ def generate_graph(num_vertices: int,
                 connections: list[int],
                 points: list[Point]
                 ) -> None:
-        left_delta = connections[index] // 2
-        start = index - left_delta
-        end = index + connections[index] - left_delta + 1
+        # connections asked is wider than the point pool
+        if connections[index] > len(points):
+            raise IndexError('cannot connect to more points than available')
 
+        # center around current index
+        window_radius = connections[index] // 2
+        start = index - window_radius
+        end = start + connections[index]
+        final_index = len(points) - 1
+
+        # adjust window boundaries
         if start < 0:
             end += abs(start)
             start = 0
 
+        if end > final_index:
+            start -= end - final_index
+            end = final_index
+
+        # connect values in window range
         for i in range(start, end):
-            if i == index:
+            if i == index:  # but skip self connection
                 continue
 
             point_a = points[index]
