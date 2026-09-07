@@ -1,9 +1,8 @@
 from __future__ import annotations
 from typing import Any, Optional, Callable
-from graph import Graph, Path, Search
+from graph import Graph, Path, Search, Point
 import numpy as np
 from random import uniform
-from graph_types import Point
 
 
 def all_paths(graph: Graph,

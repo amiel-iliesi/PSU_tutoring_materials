@@ -1,19 +1,23 @@
 '''Testing suite for `graph.py`'''
 
-from graph import Graph, Search, Path
+from graph import Graph, Search, Path, Point
 from typing import Any
 from utils import all_paths, generate_graph
-from utils import Point
 import pickle
 import signal
 from random import randint
 import pytest
 
 # TODO:
+# - test_cyles timeout fails, re-implement as asyncio process, pass thread
+#   pool to execute, and figure out how to kill process afterwards
+# - figure out parent/relative imports for the graph module
 # - convert to pytest
 # - create tests for individual pathing algorithms with example graphs
 
 
+# FIXME
+@pytest.mark.skip(reason='broken timeout execution and try/except')
 def test_cycles() -> None:
     '''Tests if each search algorithm is able to search despite the presence
     of cycles.'''
@@ -38,7 +42,7 @@ def test_cycles() -> None:
     for search in Search:
         path: Path = []
 
-        try:
+        try:  # FIXME: doesn't work; is breaking pytest
             signal.alarm(2)
 
             path = graph.path(SOURCE, DESTINATION, method=search)
