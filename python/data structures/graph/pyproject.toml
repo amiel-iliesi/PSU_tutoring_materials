@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "graph"
+version = "0.0.1"
+description = "A generic node graph implementation with basic search."
+dependencies = [
+    'pytest>=9.1.1',
+    'numpy>=2.5.3',
+    'mypy>=2.3.1'
+]
+
+
+[tool.setuptools.packages.find]
+where = ["src"]
