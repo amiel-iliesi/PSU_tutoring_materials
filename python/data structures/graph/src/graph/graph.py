@@ -4,12 +4,14 @@ from __future__ import annotations
 from typing import TypeVar, Generic, Optional, Any, Callable
 from enum import Enum
 import json
-from queue import Queue
+from queue import SimpleQueue
 
 T = TypeVar('T')
 
 # TODO:
 # - Implement the remaining search algorithms.
+# - convert Path type to a class, move to `graph_types.py`
+#   * implement QoL features like path.weight, and path.pretty
 
 
 class Edge:
@@ -394,16 +396,20 @@ class Graph:
         '''Implementation of the BFS algorithm.'''
         found = False
         searched: set[int] = set()
-        queue: Queue[Vertex] = Queue()
+        queue: SimpleQueue[Vertex] = SimpleQueue()
         # A -(e)-> B: edge_trace[B] = (A, e)
         edge_trace: dict[Vertex, Optional[tuple[Vertex, Edge]]] = {}
 
         queue.put(source)
         edge_trace[source] = None
 
-        while queue.not_empty:
+        while not queue.empty():
             current_vertex = queue.get()
-            searched.add(id(current_vertex))
+
+            if id(current_vertex) in searched:
+                continue
+            else:
+                searched.add(id(current_vertex))
 
             if current_vertex == destination:
                 found = True

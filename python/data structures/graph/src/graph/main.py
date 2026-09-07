@@ -1,7 +1,7 @@
 '''Example usage of the graph in a practical setting.'''
 
-from graph import Graph, Search
-from graph_types import Point
+from graph.graph import Graph, Search
+from graph.graph_types import Point
 import pickle
 
 if __name__ == '__main__':
