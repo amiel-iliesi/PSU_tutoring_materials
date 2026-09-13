@@ -1,57 +1,76 @@
 '''Testing suite for `graph.py`'''
 
 from graph import Graph, Search, Path, Point
-from typing import Any
+from typing import Any, Callable
 from utils import all_paths, generate_graph
 import pickle
-import signal
 from random import randint
 import pytest
+import multiprocessing as mp
+from functools import partial
 
 # TODO:
-# - test_cyles timeout fails, re-implement as asyncio process, pass thread
-#   pool to execute, and figure out how to kill process afterwards
-# - figure out parent/relative imports for the graph module
-# - convert to pytest
+# * convert timeout code to a seperate process which allows premature
+#   termination for synchronous processes
 # - create tests for individual pathing algorithms with example graphs
 
 
-# FIXME
-@pytest.mark.skip(reason='broken timeout execution and try/except')
 def test_cycles() -> None:
     '''Tests if each search algorithm is able to search despite the presence
     of cycles.'''
 
+    # 1. Create a simple graph with a cycle in it
     graph = Graph()
 
-    # -run test----------------------------------------------------------------
-    for label in ('A', 'B', 'C', 'D'):
-        graph.create_vertex(label)
+    for x, y in ((0, 0), (1, 0), (1, 1), (2, 0)):
+        graph.create_vertex(Point(x, y))
 
     # create cycle
-    graph.connect('A', 'B', weight=1.0)
-    graph.connect('B', 'C', weight=1.0)
-    graph.connect('C', 'A', weight=1.0)
+    graph.connect(Point(0, 0), Point(1, 0), weight=1.0)
+    graph.connect(Point(1, 0), Point(1, 1), weight=1.0)
+    graph.connect(Point(1, 1), Point(0, 0), weight=1.0)
 
     # create path to exit
-    graph.connect('B', 'D', weight=1.0)
+    graph.connect(Point(1, 0), Point(2, 0), weight=1.0)
 
-    # check paths on all search algorithms
-    SOURCE = 'A'
-    DESTINATION = 'D'
+    # 2. run all searches in subprocess that can be terminated
+    SOURCE = Point(0, 0)
+    DESTINATION = Point(2, 0)
+    TIMEOUT_SECONDS = 2
+
+    paths: mp.Queue[Path] = mp.Queue()
+
     for search in Search:
-        path: Path = []
+        # 2.a. define multiprocessing worker routines
+        def dest_dist() -> Callable[[Any], float]:
+            return partial(Point.distance, b=DESTINATION)
 
-        try:  # FIXME: doesn't work; is breaking pytest
-            signal.alarm(2)
+        def run_method(method: Search, paths: mp.Queue) -> None:
+            path = graph.path(SOURCE,
+                              DESTINATION,
+                              method,
+                              heuristic=dest_dist())
 
-            path = graph.path(SOURCE, DESTINATION, method=search)
-        except TimeoutError:
-            raise TimeoutError(f'{search.name}: timeout')
+            paths.put(path)
+
+        # 2.b. run current search with timeout
+        process = mp.Process(target=run_method, args=(search, paths))
+
+        process.start()
+        process.join(TIMEOUT_SECONDS)
+
+        # 2.c. determine if process timed out
+        if process.is_alive():
+            process.terminate()
+            process.join()
+            pytest.fail(f'timeout: {search.name} '
+                        f'after {TIMEOUT_SECONDS} seconds')
         else:
-            signal.alarm(0)
+            assert process.exitcode == 0
 
-            assert Graph.reaches(DESTINATION, path)
+    while not paths.empty():
+        path = paths.get()
+        assert Graph.reaches(path, DESTINATION)
 
 
 def test_keyerror() -> None:

@@ -125,7 +125,7 @@ class Graph:
         return s
 
     @staticmethod
-    def reaches(destination: Any, path: Path) -> bool:
+    def reaches(path: Path, destination: Any) -> bool:
         '''Checks if a destination is reachable on the given path.
 
         ### arguments
@@ -301,7 +301,7 @@ class Graph:
         * `destination`: the key to find a path to, from `source`.
         * `method`: an enum value determining the pathing algorithm to use.
         * `heuristic`: a user-defined heuristic function for use in
-        `method=Search.A_STAR`.
+        `method=Search.A_STAR`. Other methods ignore any passed heuristic.
 
         ### returns
         A `Path` that the search found. An empty path indicates there doesn't
@@ -315,9 +315,9 @@ class Graph:
 
         if method is Search.DFS:
             return self._path_dfs(source_vertex, destination_vertex)
-        if method is Search.BFS:
+        elif method is Search.BFS:
             return self._path_bfs(source_vertex, destination_vertex)
-        if method is Search.A_STAR:
+        elif method is Search.A_STAR:
             if heuristic is None:
                 raise ValueError('Path search run with A* needs a heuristic '
                                  'function.')
@@ -416,9 +416,11 @@ class Graph:
                 break
 
             for edge in current_vertex.edges:
-                if edge.destination not in searched:
-                    queue.put(edge.destination)
-                    edge_trace[edge.destination] = (current_vertex, edge)
+                next_vertex = edge.destination
+                queue.put(next_vertex)
+                # no overwrite trace, first visited is first assigned
+                if next_vertex not in edge_trace:
+                    edge_trace[next_vertex] = (current_vertex, edge)
 
         if not found:
             return []
