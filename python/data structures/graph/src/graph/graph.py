@@ -124,6 +124,9 @@ class Graph:
 
         return s
 
+    def __getitem__(self, key: Any):
+        return self.vertices[key]
+
     @staticmethod
     def reaches(path: Path, destination: Any) -> bool:
         '''Checks if a destination is reachable on the given path.
@@ -326,10 +329,18 @@ class Graph:
             raise NotImplementedError
 
     @staticmethod
-    def pretty_path(path: Path) -> str:
+    def pretty_path(path: Path, show_weight=True) -> str:
         '''A method for generating human-readable paths from a `Path`
         object.'''
 
+        if show_weight:
+            return Graph._pretty_path_weighted(path)
+        else:
+            return Graph._pretty_path_unweighted(path)
+
+    @staticmethod
+    def _pretty_path_weighted(path: Path) -> str:
+        '''Dispatch `pretty_path` function that incorporates weight.'''
         if len(path) == 0:
             return 'Path DNE'
         else:
@@ -361,6 +372,25 @@ class Graph:
             prefix += end
 
             return f'Path({prefix}): {s}'
+
+    @staticmethod
+    def _pretty_path_unweighted(path: Path) -> str:
+        '''Dispatch `pretty_path` function that ignores weight.'''
+        if len(path) == 0:
+            return 'path DNE'
+
+        start = path[0][0].key
+        end = path[-1][1].destination.key
+
+        s = f'{start}->{end}: '
+
+        curr = path[0]
+        s += str(curr[0].key)
+
+        for _, to in path:
+            s += '->' + str(to.destination.key)
+
+        return s
 
     def _path_dfs(self,
                   source: Vertex[Any],
