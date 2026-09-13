@@ -8,18 +8,49 @@ from random import randint
 import pytest
 import multiprocessing as mp
 from functools import partial
+import pathlib
 
-# TODO:
-# - create tests for individual pathing algorithms with example graphs
-
-
-# TODO
-@pytest.mark.skip('not yet completed')
-def test_path_DFS() -> None:
-    '''Tests the DFS algorithm.'''
-    pass
+GRAPHS_DIR = pathlib.Path(__file__).parent / 'test_graphs/'
 
 
+@pytest.mark.skip(reason='needs all pathing methods implemented')
+def test_reachability() -> None:
+    '''Tests whether or not all algorithms create paths, when a path should
+    exist.'''
+
+    graph: Graph
+
+    GRAPH = 'islands.pickle'
+
+    with open(GRAPHS_DIR / GRAPH, 'rb') as f:
+        graph = pickle.load(f)
+
+    def test_connects(source: str,
+                      destination: str,
+                      should_connect: bool) -> None:
+        '''Runs an assertion over all algorithms for the given criteria.'''
+        paths = all_paths(graph, source, destination)
+
+        for search in paths:  # use key lookup for PyTest notation
+            if should_connect:
+                assert Graph.reaches(paths[search], destination)
+            else:
+                assert not Graph.reaches(paths[search], destination)
+
+    test_connects('a', 'c', True)
+    test_connects('c', 'a', True)
+    test_connects('a', 'a', True)
+
+    test_connects('g', 'a', False)
+    test_connects('g', 'g', False)
+
+    test_connects('h', 'd', True)
+    test_connects('d', 'h', False)
+    test_connects('d', 'd', True)
+    test_connects('h', 'h', False)
+
+
+@pytest.mark.skip(reason='needs all pathing methods implemented')
 def test_cycles() -> None:
     '''Tests if each search algorithm is able to search despite the presence
     of cycles.'''

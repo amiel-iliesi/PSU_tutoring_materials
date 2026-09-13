@@ -12,3 +12,8 @@ right adjacent neighbors. Their weights are between `(0, 5] +
 distance_from_diagonal`. This is to test the Dijkstra property. Because the
 diagonal is weighted lower than the distant corners from the goal, A* and
 Dijkstra should be very similar.
+
+### `islands`
+
+A graph with various isolated islands. Useful for testing connectivity and
+reachability.
