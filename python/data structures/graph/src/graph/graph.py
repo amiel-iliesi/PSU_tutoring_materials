@@ -5,13 +5,14 @@ from typing import TypeVar, Generic, Optional, Any, Callable
 from enum import Enum
 import json
 from queue import SimpleQueue
+import heapq
+from math import inf
+from dataclasses import dataclass, field
 
 T = TypeVar('T')
 
 # TODO:
 # - Implement the remaining search algorithms.
-# - convert Path type to a class, move to `graph_types.py`
-#   * implement QoL features like path.weight, and path.pretty
 
 
 class Edge:
@@ -85,12 +86,32 @@ class Vertex(Generic[T]):
 
         raise KeyError(f'{repr(self)} has no edge to {destination}')
 
+    def get_edge(self, destination: Vertex[Any]) -> Edge:
+        '''Convert Vertex reference into Edge reference.
+
+        ### Raises
+        `KeyError`: if the destination is not a member of the edges'''
+        for edge in self.edges:
+            if edge.destination is destination:
+                return edge
+
+        raise KeyError(f'{destination} is not an edge')
+
     def to_json(self) -> str:
         return '{' +\
             f'"id": {id(self)}, ' +\
             f'"key": "{repr(self.key)}", ' +\
             f'"edges": [{', '.join(edge.to_json() for edge in self.edges)}]' +\
             '}'
+
+
+@dataclass(order=True)
+class _Dijkstra_Element:
+    '''A comparable element based on cumulative weight, that bundles vertex
+    and source pathing information.'''
+    cum_weight: float
+    vertex: Vertex[Any] = field(compare=False)
+    source: Optional[Vertex[Any]] = field(compare=False)
 
 
 class Search(Enum):
@@ -124,8 +145,11 @@ class Graph:
 
         return s
 
-    def __getitem__(self, key: Any):
+    def __getitem__(self, key: Any) -> Vertex[Any]:
         return self.vertices[key]
+
+    def __len__(self) -> int:
+        return self.size()
 
     @staticmethod
     def reaches(path: Path, destination: Any) -> bool:
@@ -268,6 +292,10 @@ class Graph:
         '''Clears all `Vertices` and consequently `Edges` from the graph.'''
         self.vertices.clear()
 
+    def size(self) -> int:
+        '''Returns the number of vertices in the graph.'''
+        return len(self.vertices)
+
     def to_json(self) -> str:
         return '{"vertices": [' +\
             ','.join(vertex.to_json() for vertex in self.vertices.values()) +\
@@ -320,26 +348,26 @@ class Graph:
             return self._path_dfs(source_vertex, destination_vertex)
         elif method is Search.BFS:
             return self._path_bfs(source_vertex, destination_vertex)
-        elif method is Search.A_STAR:
+        elif method is Search.DIJKSTRA:
+            return self._path_dijkstra(source_vertex, destination_vertex)
+        else:
             if heuristic is None:
                 raise ValueError('Path search run with A* needs a heuristic '
                                  'function.')
             raise NotImplementedError
-        else:
-            raise NotImplementedError
 
     @staticmethod
-    def pretty_path(path: Path, show_weight=True) -> str:
+    def path_pretty(path: Path, show_weight=True) -> str:
         '''A method for generating human-readable paths from a `Path`
         object.'''
 
         if show_weight:
-            return Graph._pretty_path_weighted(path)
+            return Graph._path_pretty_weighted(path)
         else:
-            return Graph._pretty_path_unweighted(path)
+            return Graph._path_pretty_unweighted(path)
 
     @staticmethod
-    def _pretty_path_weighted(path: Path) -> str:
+    def _path_pretty_weighted(path: Path) -> str:
         '''Dispatch `pretty_path` function that incorporates weight.'''
         if len(path) == 0:
             return 'Path DNE'
@@ -351,7 +379,7 @@ class Graph:
             for source, to in path:
                 s += f'{str(source.key)}'
                 if to.weight is not None:
-                    s += f' -({to.weight})-> '
+                    s += f' -({to.weight:.2f})-> '
 
                     if cum_weight is None:
                         cum_weight = 0.0
@@ -366,7 +394,7 @@ class Graph:
             s += end
 
             prefix = start
-            prefix += f'-({cum_weight})->'\
+            prefix += f'-({cum_weight:.2f})->'\
                 if cum_weight is not None else\
                 '->'
             prefix += end
@@ -374,7 +402,7 @@ class Graph:
             return f'Path({prefix}): {s}'
 
     @staticmethod
-    def _pretty_path_unweighted(path: Path) -> str:
+    def _path_pretty_unweighted(path: Path) -> str:
         '''Dispatch `pretty_path` function that ignores weight.'''
         if len(path) == 0:
             return 'path DNE'
@@ -391,6 +419,21 @@ class Graph:
             s += '->' + str(to.destination.key)
 
         return s
+
+    @staticmethod
+    def path_weight(path: Path) -> float:
+        '''Returns the cumulative weight of the path.
+
+        ### Note: `weight=None` is treated as infinity/unreachable.'''
+        cum_weight: float = 0.0
+
+        for _, edge in path:
+            if edge.weight is None or edge.weight is inf:
+                return inf
+            else:
+                cum_weight += edge.weight
+
+        return cum_weight
 
     def _path_dfs(self,
                   source: Vertex[Any],
@@ -426,7 +469,7 @@ class Graph:
         '''Implementation of the BFS algorithm.'''
         found = False
         searched: set[int] = set()
-        queue: SimpleQueue[Vertex] = SimpleQueue()
+        queue: SimpleQueue[Vertex[Any]] = SimpleQueue()
         # A -(e)-> B: edge_trace[B] = (A, e)
         edge_trace: dict[Vertex, Optional[tuple[Vertex, Edge]]] = {}
 
@@ -467,5 +510,77 @@ class Graph:
                 curr_vertex_trace, _ = from_info
             else:
                 curr_vertex_trace = None
+
+        return path
+
+    def _path_dijkstra(self,
+                       source: Vertex[Any],
+                       destination: Vertex[Any]) -> Path:
+        '''Implementation of Dijkstra's Algorithm.'''
+
+        # Dijkstra handles self loops just fine except for source, due to
+        # priority queue initialization method
+        if source == destination and not source.connected(source):
+            return []
+
+        hq: list[_Dijkstra_Element] = [_Dijkstra_Element(0, source, None)]
+        # elements created for needed info storage--for eventual backtracking
+        elements: dict[int, _Dijkstra_Element] = {
+            id(source): hq[0]
+        }
+        # keep track of visited, instead of adding *all* to hq @inf to begin
+        # with; negative process with progressive load--should be lighter
+        # execute on average
+        visited: set[int] = set()
+
+        while len(hq) != 0:
+            curr = heapq.heappop(hq)
+
+            if curr.vertex == destination:
+                break
+
+            # cycle prevention
+            if id(curr.vertex) in visited:
+                continue
+            else:
+                visited.add(id(curr.vertex))
+
+            curr_weight = curr.cum_weight
+
+            for edge in curr.vertex.edges:
+                # unreachable -> not worth enqueuing
+                if edge.weight is None or edge.weight is inf:
+                    continue
+
+                to = edge.destination
+                weight = curr_weight + edge.weight
+
+                if id(to) in elements:
+                    element = elements[id(to)]
+                    if weight < element.cum_weight:
+                        # prioritize lowest weight source
+                        element.cum_weight = weight
+                        element.source = curr.vertex
+                        heapq.heapify(hq)  # element might be in queue still
+                else:
+                    element = _Dijkstra_Element(weight, to, curr.vertex)
+                    elements[id(to)] = element
+                    heapq.heappush(hq, element)
+
+        if id(destination) not in elements:
+            return []
+
+        # build path in reverse
+        path: Path = []
+        curr = elements[id(destination)]
+        while True:
+            dst = curr.vertex
+            src = curr.source
+
+            if src is not None:
+                path.insert(0, (src, src.get_edge(dst)))
+                curr = elements[id(src)]
+            else:
+                break
 
         return path
