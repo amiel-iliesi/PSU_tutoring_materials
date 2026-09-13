@@ -11,9 +11,6 @@ from dataclasses import dataclass, field
 
 T = TypeVar('T')
 
-# TODO:
-# - path_list: print path in list format
-
 
 class Edge:
     '''Represents the edge that connects two vertices. Source vertex is left
