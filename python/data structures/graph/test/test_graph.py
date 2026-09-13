@@ -10,9 +10,14 @@ import multiprocessing as mp
 from functools import partial
 
 # TODO:
-# * convert timeout code to a seperate process which allows premature
-#   termination for synchronous processes
 # - create tests for individual pathing algorithms with example graphs
+
+
+# TODO
+@pytest.mark.skip('not yet completed')
+def test_path_DFS() -> None:
+    '''Tests the DFS algorithm.'''
+    pass
 
 
 def test_cycles() -> None:
@@ -163,7 +168,13 @@ def test_pathfinding() -> None:
     '''Generates large, random graphs, and runs many random trials and paths
     over those graphs. No specifics are guaranteed, but the existence of a path
     must be aggreed on by every search method. This test checks that no search
-    method fails while others succeed--undefined behavior.'''
+    method fails while others succeed--undefined behavior.
+
+    Failures are saved in a failed graph pickle file.
+
+    ### failure log contents
+
+    '''
 
     graph = Graph()
 
@@ -175,6 +186,13 @@ def test_pathfinding() -> None:
     RADIUS = MAX_CONNECTIONS - AVERAGE_CONNECTIONS
     MIN_CONNECTIONS = AVERAGE_CONNECTIONS - RADIUS
     MAX_WANDER = 1.0
+
+    # save all graphs with failures in the format of:
+    # [{
+    #    'graph': graph.Graph,
+    #    'inputs': [{'source': key, 'destination': key}, ...]
+    # }, ...]
+    failed_graphs: list[dict[str, Any]] = []
 
     for _ in range(TRIALS):
         graph.clear()
@@ -208,10 +226,14 @@ def test_pathfinding() -> None:
                 failed_inputs.append({'source': A.key, 'destination': B.key})
 
         if len(failed_inputs) > 0:
-            with open('test_pathfinding_failed_graphs.pickle', 'wb') as f:
-                failed_graph: dict[str, Any] = {}
+            failed_graph: dict[str, Any] = {}
 
-                failed_graph['graph'] = graph
-                failed_graph['inputs'] = failed_inputs
+            failed_graph['graph'] = graph
+            failed_graph['inputs'] = failed_inputs
 
-                pickle.dump(failed_graph, f)
+            failed_graphs.append(failed_graph)
+
+    # if any graphs failed, save it to the pickle log file
+    if len(failed_graphs) > 0:
+        with open('test_pathfinding_failed_graphs.pickle', 'wb') as f:
+            pickle.dump(failed_graphs, f)
