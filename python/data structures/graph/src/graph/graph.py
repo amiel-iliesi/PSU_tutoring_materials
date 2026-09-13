@@ -12,7 +12,7 @@ from dataclasses import dataclass, field
 T = TypeVar('T')
 
 # TODO:
-# - Implement the remaining search algorithms.
+# - path_list: print path in list format
 
 
 class Edge:
@@ -349,12 +349,17 @@ class Graph:
         elif method is Search.BFS:
             return self._path_bfs(source_vertex, destination_vertex)
         elif method is Search.DIJKSTRA:
-            return self._path_dijkstra(source_vertex, destination_vertex)
+            def no_op(_: Any) -> float:
+                return 0
+
+            return self._path_a_star(source_vertex, destination_vertex, no_op)
         else:
             if heuristic is None:
                 raise ValueError('Path search run with A* needs a heuristic '
                                  'function.')
-            raise NotImplementedError
+            return self._path_a_star(source_vertex,
+                                     destination_vertex,
+                                     heuristic)
 
     @staticmethod
     def path_pretty(path: Path, show_weight=True) -> str:
@@ -435,6 +440,14 @@ class Graph:
 
         return cum_weight
 
+    @staticmethod
+    def path_list(path: Path) -> list[Any]:
+        if len(path) == 0:
+            return []
+
+        return [vertex.key for vertex, _ in path]\
+            + [path[-1][1].destination.key]
+
     def _path_dfs(self,
                   source: Vertex[Any],
                   destination: Vertex[Any]
@@ -468,13 +481,18 @@ class Graph:
                   ) -> Path:
         '''Implementation of the BFS algorithm.'''
         found = False
+
         searched: set[int] = set()
         queue: SimpleQueue[Vertex[Any]] = SimpleQueue()
         # A -(e)-> B: edge_trace[B] = (A, e)
         edge_trace: dict[Vertex, Optional[tuple[Vertex, Edge]]] = {}
 
         queue.put(source)
-        edge_trace[source] = None
+
+        # if we are expecting a cyclic answer, don't assume source has no
+        # source of it's own
+        if source != destination:
+            edge_trace[source] = None
 
         while not queue.empty():
             current_vertex = queue.get()
@@ -484,40 +502,47 @@ class Graph:
             else:
                 searched.add(id(current_vertex))
 
-            if current_vertex == destination:
-                found = True
-                break
-
             for edge in current_vertex.edges:
                 next_vertex = edge.destination
-                queue.put(next_vertex)
+
                 # no overwrite trace, first visited is first assigned
                 if next_vertex not in edge_trace:
                     edge_trace[next_vertex] = (current_vertex, edge)
+
+                if next_vertex == destination:
+                    found = True
+                    break
+
+                queue.put(next_vertex)
 
         if not found:
             return []
 
         path: Path = []
 
-        curr_vertex_trace: Optional[Vertex[Any]] = destination
+        curr_vertex_trace: Vertex[Any] = destination
 
-        while curr_vertex_trace is not None:
+        while True:
             from_info = edge_trace[curr_vertex_trace]
 
             if from_info is not None:
                 path.insert(0, from_info)
                 curr_vertex_trace, _ = from_info
+
+                # reached beginning of cycle, leave
+                if curr_vertex_trace == source:
+                    break
             else:
-                curr_vertex_trace = None
+                break
 
         return path
 
-    def _path_dijkstra(self,
-                       source: Vertex[Any],
-                       destination: Vertex[Any]) -> Path:
-        '''Implementation of Dijkstra's Algorithm.'''
-
+    def _path_a_star(self,
+                     source: Vertex[Any],
+                     destination: Vertex[Any],
+                     heuristic: Callable[[Any], float]
+                     ) -> Path:
+        '''Implementation of the A* algorithm.'''
         # Dijkstra handles self loops just fine except for source, due to
         # priority queue initialization method
         if source == destination and not source.connected(source):
@@ -553,7 +578,7 @@ class Graph:
                     continue
 
                 to = edge.destination
-                weight = curr_weight + edge.weight
+                weight = curr_weight + edge.weight + heuristic(to.key)
 
                 if id(to) in elements:
                     element = elements[id(to)]

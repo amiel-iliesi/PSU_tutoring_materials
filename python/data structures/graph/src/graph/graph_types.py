@@ -28,6 +28,7 @@ class Point:
         return sqrt((a.x-b.x)**2 + (a.y-b.y)**2)
 
     @staticmethod
-    def distance_manhattan(a: Point, b: Point) -> float:
-        '''Faster but less accurate than Euclidean distance.'''
-        return abs(a.x-b.x) + abs(a.y-b.y)
+    def distance_chebyshev(a: Point, b: Point) -> float:
+        '''Faster but less accurate than Euclidean distance. Still an
+        admissable heuristic.'''
+        return max(abs(a.x-b.x), abs(a.y-b.y))

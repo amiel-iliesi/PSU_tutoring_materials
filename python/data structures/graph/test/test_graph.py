@@ -13,7 +13,6 @@ import pathlib
 GRAPHS_DIR = pathlib.Path(__file__).parent / 'test_graphs/'
 
 
-@pytest.mark.skip(reason='needs all pathing methods implemented')
 def test_reachability() -> None:
     '''Tests whether or not all algorithms create paths, when a path should
     exist.'''
@@ -29,7 +28,8 @@ def test_reachability() -> None:
                       destination: str,
                       should_connect: bool) -> None:
         '''Runs an assertion over all algorithms for the given criteria.'''
-        paths = all_paths(graph, source, destination)
+        paths = {search: graph.path(source, destination, search)
+                 for search in (Search.BFS, Search.DFS)}
 
         for search in paths:  # use key lookup for PyTest notation
             if should_connect:
@@ -50,7 +50,6 @@ def test_reachability() -> None:
     test_connects('h', 'h', False)
 
 
-@pytest.mark.skip(reason='needs all pathing methods implemented')
 def test_cycles() -> None:
     '''Tests if each search algorithm is able to search despite the presence
     of cycles.'''
@@ -194,7 +193,6 @@ def test_bidirectionality() -> None:
         a.get_weight(b) == b.get_weight(a) == 1.0
 
 
-@pytest.mark.skip(reason='needs all pathing methods implemented')
 def test_pathfinding() -> None:
     '''Generates large, random graphs, and runs many random trials and paths
     over those graphs. No specifics are guaranteed, but the existence of a path
@@ -237,24 +235,30 @@ def test_pathfinding() -> None:
         points = list(graph.vertices.keys())
 
         for _ in range(N_PATHS_CHECKED):
-            A = points[randint(0, len(points)-1)]
-            B = points[randint(0, len(points)-1)]
+            i = randint(0, len(points)-1)
+            j = randint(0, len(points)-1)
+
+            # i != j; Dijkstra and A* have differing conventions than BFS/DFS
+            # on source==destination
+            while j == i:
+                j = randint(0, len(points)-1)
+
+            A = points[i]
+            B = points[j]
 
             def dist_to_goal(A: Point) -> float:
-                return Point.distance(A, B.key)
+                return Point.distance(A, B)
 
             paths = all_paths(graph, A, B, heuristic=dist_to_goal)
 
             n_paths_found = sum(1 for path in paths.values()
-                                if Graph.reaches(B, path))
+                                if Graph.reaches(path, B))
 
             all_paths_match = n_paths_found == 0 \
                 or n_paths_found == len(Search)
 
-            assert all_paths_match
-
             if not all_paths_match:
-                failed_inputs.append({'source': A.key, 'destination': B.key})
+                failed_inputs.append({'source': A, 'destination': B})
 
         if len(failed_inputs) > 0:
             failed_graph: dict[str, Any] = {}
@@ -266,5 +270,9 @@ def test_pathfinding() -> None:
 
     # if any graphs failed, save it to the pickle log file
     if len(failed_graphs) > 0:
-        with open('test_pathfinding_failed_graphs.pickle', 'wb') as f:
+        TESTPATH = pathlib.Path(__file__).parent
+        FILENAME = 'test_pathfinding_failed_graphs.pickle'
+        with open(TESTPATH / FILENAME, 'wb') as f:
             pickle.dump(failed_graphs, f)
+
+        pytest.fail('all algorithms should agree on path existence')

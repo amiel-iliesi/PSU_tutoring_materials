@@ -21,7 +21,7 @@ def all_paths(graph: Graph,
     else:
         methods = [search for search in Search if search is not Search.A_STAR]
 
-    return {method: graph.path(source, destination, method=method)
+    return {method: graph.path(source, destination, method, heuristic)
             for method in methods}
 
 
