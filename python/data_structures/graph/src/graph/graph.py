@@ -188,10 +188,25 @@ class Graph:
 
         ### returns
         If a vertex was removed.'''
-        if self.vertices.get(key) is None:
+
+        vertex_to_remove = self.vertices.get(key)
+
+        if vertex_to_remove is None:
             return False
 
+        # 1. remove vertex from graph table
         del self.vertices[key]
+
+        # 2. remove all references to removed vertex in all edges
+        for vertex in self.vertices.values():
+            for edge in vertex.edges:
+                if vertex_to_remove == edge.destination:
+                    vertex.edges.remove(edge)
+                    # list modified; loop is now invalid--we must break.
+                    # This is fine though because keys must be unique so we
+                    # don't need to re-enter the loop.
+                    break
+
         return True
 
     def connect(self,
