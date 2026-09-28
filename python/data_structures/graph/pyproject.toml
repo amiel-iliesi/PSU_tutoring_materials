@@ -14,8 +14,10 @@ dependencies = ['pytest>=9.1.1', 'numpy>=2.5.3', 'mypy>=2.3.1']
 readme = "README.md"
 license = "GPL-3.0-or-later"
 keywords = ["graph", "search"]
-homepage = "https://github.com/amiel-iliesi"
-repository = "https://github.com/amiel-iliesi/PSU_tutoring_materials/tree/main/python/data_structures/graph"
+
+[project.urls]
+Homepage = "https://github.com/amiel-iliesi"
+Repository = "https://github.com/amiel-iliesi/PSU_tutoring_materials/tree/main/python/data_structures/graph"
 
 [tool.setuptools.packages.find]
 where = ["src"]
