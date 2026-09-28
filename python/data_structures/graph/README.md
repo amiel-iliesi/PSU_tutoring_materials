@@ -26,7 +26,7 @@ pip install "graph @ git+https://github.com/amiel-iliesi/PSU_tutoring_materials.
 
 ## Overview and Outline
 
-The graph is a basic implementation of a node graph. It accept generic type, and implements several search algorithms over the nodes. All that is required is that the type is comparable on **equality**. If you need a more complicated equality comparison, wrap your object in a class that defines it for your type. For an example of this equality overriding, look at the definition of the `Point` type in: `graph/src/graph/graph_types.py`.
+The graph is a basic implementation of a node graph. It accepts generic types, and implements several search algorithms. All that is required is that the types are comparable on **equality**. If you need a more complicated equality comparison, wrap your object in a class that defines it for your type. For an example of this equality overriding, look at the definition of the `Point` type in: `graph/src/graph/graph_types.py`.
 
 The graph is represented as follows:
 
