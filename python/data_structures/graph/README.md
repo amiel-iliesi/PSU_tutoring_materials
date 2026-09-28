@@ -23,6 +23,7 @@ pip install "graph @ git+https://github.com/amiel-iliesi/PSU_tutoring_materials.
 
 * `graph/src/graph/`: Implementation files.
 * `graph/test/`: pytest cases.
+* `graph/example_graphs/`: some serialized graphs for use with [pickle](https://docs.python.org/3/library/pickle.html). An example of this can be seen in `graph/main.py`.
 
 ## Overview and Outline
 
