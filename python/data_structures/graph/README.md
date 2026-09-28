@@ -34,6 +34,8 @@ Graph type requirements, the following are defined:
 * `__eq__`
 * `__hash__`
 
+See an example of a custom type with all requirements met with the `Point` class, in `graph/src/graph/graph_types.py`.
+
 The graph is represented as follows:
 
 * `Graph`: A dictionary of keys to vertices.
