@@ -76,13 +76,6 @@ class Vertex(Generic[T]):
         destination.'''
         return any(destination == edge.destination for edge in self.edges)
 
-    def get_weight(self, destination: Any) -> Optional[float]:
-        for edge in self.edges:
-            if edge.destination == destination:
-                return edge.weight
-
-        raise KeyError(f'{repr(self)} has no edge to {destination}')
-
     def get_edge(self, destination: Vertex[Any]) -> Edge:
         '''Convert Vertex reference into Edge reference.
 
@@ -93,6 +86,9 @@ class Vertex(Generic[T]):
                 return edge
 
         raise KeyError(f'{destination} is not an edge')
+
+    def get_weight(self, destination: Vertex[Any]) -> Optional[float]:
+        return self.get_edge(destination).weight
 
     def to_json(self) -> str:
         return '{' +\
