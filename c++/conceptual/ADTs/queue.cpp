@@ -7,12 +7,12 @@ void Queue::push(const Person& data)
 
 Person Queue::peek()
 {
-	return list.get(0);
+	return list.front();
 }
 
 Person Queue::pop()
 {
-	Person person = list.get(0);
+	Person person = list.front();
 	list.remove(0);
 
 	return person;
