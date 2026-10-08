@@ -1,5 +1,7 @@
 #include "queue.h"
 
+#include <stdexcept>
+
 void Queue::push(const Person& data)
 {
 	list.push_back(data);
@@ -12,6 +14,10 @@ Person Queue::peek()
 
 Person Queue::pop()
 {
+	if (list.is_empty()) {
+		throw std::out_of_range("cannot pop an empty queue");
+	}
+
 	Person person = list.front();
 	list.remove(0);
 
