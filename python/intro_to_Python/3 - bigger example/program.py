@@ -46,5 +46,5 @@ if __name__ == "__main__":
     max_prime = int(input("generate primes up to: "))
 
     primes = get_primes(max_prime)
-    primes = ' '.join([str(n) for n in primes if n != 0])  # convert to str
+    primes = [n for n in primes if n != 0]
     print(primes)

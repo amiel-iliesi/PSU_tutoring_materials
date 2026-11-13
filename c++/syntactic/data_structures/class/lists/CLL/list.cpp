@@ -1,8 +1,9 @@
 #include "list.h"
-#include <iostream>
+#include <print>
 
 using namespace std;
 
+// -supplied functions---------------------------------------------------
 List::List()
 {
 	rear = nullptr;
@@ -51,14 +52,37 @@ void List::push_back(int data)
 void List::display() const
 {
 	if (!rear) {
-		cout << "<List @" << this << " is empty>" << endl;
+		println("<List @{} is empty>", (void*)this);
 	}
 	else {
 		for (Node *curr=rear->next; curr != rear; curr=curr->next) {
-			cout << curr->data << " -> ";
+			print("{} -> ", curr->data);
 		}
 
-		cout << rear->data << " -> ..." << endl;
+		println("{} -> ...", rear->data);
 	}
 }
 
+// -custom functions-----------------------------------------------------
+void List::recursive_display_wrapper() const
+{
+	if (!rear) {
+		println("The list is empty!");
+		return;
+	}
+
+	recursive_display(rear->next);
+
+	println(" -> ...");
+}
+
+void List::recursive_display(const Node* curr) const
+{
+	print("{}", curr->data);
+
+	// if we aren't on the last CLL node, we can loop again
+	if (curr != rear) {
+		print(" -> ");
+		recursive_display(curr->next);
+	}
+}

@@ -10,6 +10,10 @@ class List
 		};
 
 		Node *rear;
+
+		// -custom private functions---------------
+		void recursive_display(const Node* curr) const;
+		// ----------------------------------------
 	public:
 		List();
 		~List();
@@ -19,5 +23,6 @@ class List
 		void display() const;
 
 		// -custom functions-----------------------
+		void recursive_display_wrapper() const;
 		// ----------------------------------------
 };
