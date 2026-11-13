@@ -96,7 +96,7 @@ Be able to understand the problem at hand before you touch the keyboard.
 The following step after planning is to iteratively program out the solution, 
 but planning and programming aren't super clear cut boundaries. Yes the bulk of 
 the planning you will do in these small-scale projects is at the beginning as 
-you make your design desicions, but the planning never really stops.
+you make your design decisions, but the planning never really stops.
 
 For example, if I was to plan out baking some cookies as a practical process, 
 my first planning step might look something like this:
