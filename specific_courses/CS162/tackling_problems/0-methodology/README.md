@@ -157,7 +157,7 @@ looks something like this:
 3. Preheat oven.
     * Crossref recipe: <375f>.
 4. Follow recipe.
-    * read @ ~/Docments/recipe.pdf
+    * read @ ~/Documents/recipe.pdf
 5. Enjoy cookies!
 ```
 
